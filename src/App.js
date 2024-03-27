@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { render } from "react-dom";
 import { Chart } from "react-google-charts";
 import pptxgen from "pptxgenjs";
 import { toPng } from "html-to-image";
 // import { PptxGenJS } from "pptxgenjs";
+
+
 let data = {
   title: "Overall Revenues - month on month",
   table: [
@@ -158,35 +160,36 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      options: {},
-    };
-    this.table = [
-      ["Month", "Swiggy (in lacs)", "Zomato (in lacs)", "Total (in lacs)"],
-      ["Oct-2023", 19.9, 49.1, 69],
-      ["Nov-2023", 0, 0, 0],
-      ["Dec-2023", 0, 0, 0],
-      ["Jan-2024", 0, 0, 0],
-      ["Feb-2024", 0, 0, 0],
-      ["Mar-2024", 0, 0, 0],
-    ];
+const App = () => {
+  const countRef = useRef(0);
+  // console.log("App body: "+ ++countRef.current)
+  const [data, setData] = useState([]);
+  const [options, setOptions] = useState({});
+  const [chartEvents, setChartEvents] = useState([]);
+  const [chartImageURI, setChartImageURI] = useState("");
+  const chartRef = useRef(null);
 
-    this.mom = [
-      ["Revenue", "-100%"],
-      ["Orders", "-100%"],
-    ];
+  const table = [
+    ["Month", "Swiggy (in lacs)", "Zomato (in lacs)", "Total (in lacs)"],
+    ["Oct-2023", 19.9, 49.1, 69],
+    ["Nov-2023", 0, 0, 0],
+    ["Dec-2023", 0, 0, 0],
+    ["Jan-2024", 0, 0, 0],
+    ["Feb-2024", 0, 0, 0],
+    ["Mar-2024", 0, 0, 0],
+  ];
 
-    this.mom2 = [
-      ["Revenue", "-100%"],
-      ["Orders", "-100%"],
-    ];
-  }
+  const mom = [
+    ["Revenue", "-100%"],
+    ["Orders", "-100%"],
+  ];
 
-  convertTableToSvg(tableElement) {
+  const mom2 = [
+    ["Revenue", "-100%"],
+    ["Orders", "-100%"],
+  ];
+
+  const convertTableToSvg = (tableElement) => {
     const cellWidth = 65;
     const cellHeight = 30;
     const borderWidth = 1;
@@ -252,31 +255,29 @@ export default class App extends React.Component {
     const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
 
     return dataUri;
-  }
+  };
 
-  componentDidMount() {
-    let options = {
+  useEffect(() => {
+    // console.log("UseEffect body: "+ ++countRef.current)
+    const options = {
       series: {
-        0: { targetAxisIndex: 0, type: "bars" }, // First series as bars, using the first y-axis
-        1: { targetAxisIndex: 1, type: "line", lineWidth: 2 }, // Second series as line, using the second y-axis
+        0: { targetAxisIndex: 0, type: "bars" },
+        1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
       },
       vAxes: {
-        // Define the first y-axis
         0: {
           gridlines: { color: "transparent" },
           viewWindow: { min: 0 },
         },
-        // Define the second y-axis
       },
       legend: { position: "top" },
       annotations: {
         alwaysOutside: true,
         textStyle: {
-          fontSize: 14, // Set the font size for the line graph values
-          bold: true, // Set the font weight for the line graph values
+          fontSize: 14,
+          bold: true,
         },
       },
-
       chartArea: {
         left: 70,
         top: 70,
@@ -287,7 +288,25 @@ export default class App extends React.Component {
       },
     };
 
-    let data = [
+    const chart_events = [
+      {
+        eventName: "ready",
+        callback: (rcatChart) => {
+          const imageURI = rcatChart.chartWrapper
+            .getChart()
+            .getImageURI({ imageResolution: 1 });
+          console.log("inside_chart")
+          if (imageURI !== chartImageURI) {
+            console.log("inside chart events")
+            setChartImageURI(
+              rcatChart.chartWrapper.getChart().container.innerHTML
+            );
+          }
+        },
+      },
+    ];
+
+    setData([
       [
         "",
         "Net Revenue",
@@ -301,33 +320,14 @@ export default class App extends React.Component {
       ["Oct-2023", 118.1, 118.1, 25366, 25366],
       ["Nov-2023", 127.3, 127.3, 25802, 25802],
       ["Dec-2023", 150.0, 150.0, 31199, 31199],
-    ];
-    let chart_events = [
-      {
-        eventName: "ready",
-        callback: (rcatChart) => {
-          const imageURI = rcatChart.chartWrapper
-            .getChart()
-            .getImageURI({ imageResolution: 1 });
+    ]);
 
-          if (imageURI !== this.state.chartImageURI) {
-            this.setState({
-              chartImageURI:
-                rcatChart.chartWrapper.getChart().container.innerHTML,
-            });
-          }
-        },
-      },
-    ];
-
-    this.setState({
-      data: data,
-      options: options,
-      chart_events: chart_events,
-    });
-  }
-
-  convertSvgToPng(svgDataUri) {
+    setOptions(options);
+    console.log("before setting chart_events in setChartEvents(chart_events) ")
+    console.log(chart_events.length)
+    setChartEvents(chart_events);
+  }, []);
+  const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = () => {
@@ -349,31 +349,49 @@ export default class App extends React.Component {
       };
       image.src = svgDataUri;
     });
+  };
+
+  useEffect(() => {
+    console.log(chartRef.current);
+    // console.log("UseEffect chartref body: "+ ++countRef.current)
+  }, [chartRef.current]);
+  // useEffect(()=>{console.log("hello")})
+
+  const image = async () =>{
+
+    await setChartImageURI({hartImageURI: chartRef.current?.chart,})
+
   }
 
-  generateppt() {
+  const generateppt = async () => {
+    // await setChartImageURI({
+    //   chartImageURI: chartRef.current?.chart,
+    // });
+    image ();
+    console.log("hello");
     const pptx = new pptxgen();
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
 
     const node = document.createElement("div");
-    node.innerHTML = this.state.chartImageURI;
+    node.innerHTML = chartImageURI;
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(this.state.chartImageURI, "text/html");
+    const doc = parser.parseFromString(chartImageURI, "text/html");
     const svgs = doc.querySelectorAll("svg");
 
     const images = [];
-
+    console.log(svgs)
     svgs.forEach(async (svg, index) => {
       try {
         const svgData = new XMLSerializer().serializeToString(svg);
         const base64Image = btoa(svgData);
+        console.log(svg)
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
         console.log(imageuri);
 
-        this.convertSvgToPng(imageuri)
+        convertSvgToPng(imageuri)
           .then((pngDataUri) => {
             // console.log(pngDataUri);
 
@@ -402,9 +420,9 @@ export default class App extends React.Component {
 
         //main table
         const tableElement = document.getElementById("table");
-        const svgDataUri = this.convertTableToSvg(tableElement);
+        const svgDataUri = convertTableToSvg(tableElement);
 
-        this.convertSvgToPng(svgDataUri)
+        convertSvgToPng(svgDataUri)
           .then((pngDataUri) => {
             // console.log(pngDataUri);
             slide.addImage({
@@ -423,8 +441,8 @@ export default class App extends React.Component {
         //mom table
         const momtableElement = document.getElementById("momtable");
         console.log(momtableElement);
-        const momsvgDataUri = this.convertTableToSvg(momtableElement);
-        this.convertSvgToPng(momsvgDataUri)
+        const momsvgDataUri = convertTableToSvg(momtableElement);
+        convertSvgToPng(momsvgDataUri)
           .then((pngDataUri) => {
             console.log(pngDataUri);
             const momImageOptions = {
@@ -457,8 +475,8 @@ export default class App extends React.Component {
         //mom2 table
         const mom2tableElement = document.getElementById("momtable");
         console.log(momtableElement);
-        const mom2svgDataUri = this.convertTableToSvg(mom2tableElement);
-        this.convertSvgToPng(mom2svgDataUri)
+        const mom2svgDataUri = convertTableToSvg(mom2tableElement);
+        convertSvgToPng(mom2svgDataUri)
           .then((pngDataUri) => {
             console.log(pngDataUri);
             const momImageOptions = {
@@ -473,6 +491,7 @@ export default class App extends React.Component {
 
             slide.addImage(momImageOptions);
             pptx.writeFile("output.pptx");
+            console.log("hello");
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -481,44 +500,50 @@ export default class App extends React.Component {
         console.error("Error converting SVG to image:", error);
       }
     });
-  }
-  render() {
-    return (
-      <div>
-        <h2>Welcome to React</h2>
+  };
+
+  return (
+    <div>
+      <h2>Welcome to React{++countRef.current}</h2>
+      <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
-          data={this.state.data}
-          options={this.state.options}
+          data={data}
+          options={options}
           graph_id="ScatterChart"
           width="70%"
           height={"400px"}
           legend_toggle={true}
           chartPackage={["controls"]}
-          chartEvents={this.state.chart_events}
-          ref={(ref) => (this.GoogleChart = ref)}
+          chartEvents={chartEvents}
+          ref={chartRef}
+          onload={() => console.log("char hello")}
         />
-        <div
+      </div>
+      {/* { console.log("XML body: "+ ++countRef.current)} */}
+      {/* <div
           onClick={() => {
-            this.setState({
-              chartImageURI: this.GoogleChart.chart,
-            });
+            // setChartImageURI({
+            //   chartImageURI: chartRef.current?.chart,
+            // });
+            console.log(chartRef.current?.chart)
           }}
         >
-          <DataTable id="table" data={this.table} />
-          <MomTable id="momtable" data={this.mom} />
-          <Mom2Table id="mom2table" data={this.mom2} />
-          <h1>CLICK ME TO TURN CHART INTO PNG </h1>{" "}
-        </div>
+          <DataTable id="table" data={table} />
+          <MomTable id="momtable" data={mom} />
+          <Mom2Table id="mom2table" data={mom2} />
+          <h1>CLICK ME TO TURN CHART INTO PNG </h1>
+        </div> */}
 
-        <div>
-          <h2>Chart as png</h2>
-          <div dangerouslySetInnerHTML={{ __html: this.state.chartImageURI }} />
-        </div>
-        <div>
-          <button onClick={() => this.generateppt()}>Generate PPT</button>
-        </div>
+      <div>
+        <h2>Chart as png</h2>
+        <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
       </div>
-    );
-  }
-}
+      <div>
+        <button onClick={generateppt}>Generate PPT</button>
+      </div>
+    </div>
+  );
+};
+
+export default App;
