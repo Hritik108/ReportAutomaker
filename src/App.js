@@ -5,7 +5,6 @@ import pptxgen from "pptxgenjs";
 import { toPng } from "html-to-image";
 // import { PptxGenJS } from "pptxgenjs";
 
-
 let data = {
   title: "Overall Revenues - month on month",
   table: [
@@ -167,7 +166,11 @@ const App = () => {
   const [options, setOptions] = useState({});
   const [chartEvents, setChartEvents] = useState([]);
   const [chartImageURI, setChartImageURI] = useState("");
+  const [chartImage, setChartImage] = useState("");
+  const [check, setCheck] = useState(false);
   const chartRef = useRef(null);
+  const chartImageURIRef = useRef(null);
+  const checkRef = useRef(false);
 
   const table = [
     ["Month", "Swiggy (in lacs)", "Zomato (in lacs)", "Total (in lacs)"],
@@ -292,19 +295,53 @@ const App = () => {
       {
         eventName: "ready",
         callback: (rcatChart) => {
-          const imageURI = rcatChart.chartWrapper
-            .getChart()
-            .getImageURI({ imageResolution: 1 });
-          console.log("inside_chart")
-          if (imageURI !== chartImageURI) {
-            console.log("inside chart events")
-            setChartImageURI(
-              rcatChart.chartWrapper.getChart().container.innerHTML
-            );
+          if (!checkRef.current) {
+            // Check the ref value
+            const chartContainerHTML =
+              rcatChart.chartWrapper.getChart().container.innerHTML;
+            checkRef.current = true; // Update the ref value
+            setChartImageURI(chartContainerHTML); // Update chartImageURI only if it has changed
           }
         },
       },
     ];
+
+    // const chart_events = [
+    //   {
+    //     eventName: "ready",
+    //     callback: (rcatChart) => {
+    //       const imageURI = rcatChart.chartWrapper
+    //         .getChart()
+    //         .getImageURI({ imageResolution: 1 });
+    //       console.log("inside_chart");
+    //       if (imageURI !== chartImageURI) {
+    //         console.log("inside chart events");
+    //         setChartImage(
+    //           rcatChart.chartWrapper.getChart().container.innerHTML
+    //         );
+    //         setChartImageURI(imageURI); // Update chartImageURI only if it's different
+    //       }
+    //     },
+    //   },
+    // ];
+
+    // const chart_events = [
+    //   {
+    //     eventName: "ready",
+    //     callback: (rcatChart) => {
+    //       const imageURI = rcatChart.chartWrapper
+    //         .getChart()
+    //         .getImageURI({ imageResolution: 1 });
+    //       console.log("inside_chart")
+    //       if (imageURI !== chartImageURI) {
+    //         console.log("inside chart events")
+    //         setChartImageURI(
+    //           rcatChart.chartWrapper.getChart().container.innerHTML
+    //         );
+    //       }
+    //     },
+    //   },
+    // ];
 
     setData([
       [
@@ -323,8 +360,8 @@ const App = () => {
     ]);
 
     setOptions(options);
-    console.log("before setting chart_events in setChartEvents(chart_events) ")
-    console.log(chart_events.length)
+    console.log("before setting chart_events in setChartEvents(chart_events) ");
+    console.log(chart_events.length);
     setChartEvents(chart_events);
   }, []);
   const convertSvgToPng = (svgDataUri) => {
@@ -357,17 +394,15 @@ const App = () => {
   }, [chartRef.current]);
   // useEffect(()=>{console.log("hello")})
 
-  const image = async () =>{
-
-    await setChartImageURI({hartImageURI: chartRef.current?.chart,})
-
-  }
+  const image = async () => {
+    await setChartImageURI({ hartImageURI: chartRef.current?.chart });
+  };
 
   const generateppt = async () => {
     // await setChartImageURI({
     //   chartImageURI: chartRef.current?.chart,
     // });
-    image ();
+    image();
     console.log("hello");
     const pptx = new pptxgen();
     const slide = pptx.addSlide();
@@ -381,12 +416,12 @@ const App = () => {
     const svgs = doc.querySelectorAll("svg");
 
     const images = [];
-    console.log(svgs)
+    console.log(svgs);
     svgs.forEach(async (svg, index) => {
       try {
         const svgData = new XMLSerializer().serializeToString(svg);
         const base64Image = btoa(svgData);
-        console.log(svg)
+        console.log(svg);
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
         console.log(imageuri);
@@ -537,6 +572,8 @@ const App = () => {
 
       <div>
         <h2>Chart as png</h2>
+        {/* <img src={chartImageURI} /> */}
+        {/* <div dangerouslySetInnerHTML={{ __html: chartImage }} /> */}
         <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
       </div>
       <div>
