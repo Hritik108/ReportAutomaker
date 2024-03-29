@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import { Chart } from "react-google-charts";
-import pptxgen from "pptxgenjs";
 import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
+import { render } from "@testing-library/react";
 
 const DataTable = ({ data }) => {
   const cellWidth = 120;
@@ -126,7 +126,7 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-const Slide1 = ({ pptx, data }) => {
+const Slide = ({ pptx, data }) => {
   const countRef = useRef(0);
 
   const [options, setOptions] = useState({});
@@ -422,6 +422,7 @@ const Slide1 = ({ pptx, data }) => {
               bold: true,
             });
             slide.addImage(momImageOptions);
+            console.log("slide1 rendered")
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -458,15 +459,6 @@ const Slide1 = ({ pptx, data }) => {
     // reset selection after x seconds
   }, [sankey]);
 
-  // if (!checkRef.current) {
-  //   // Check the ref value
-  //   console.log(" called ");
-  //   const chartContainerHTML =
-  //     rcatChart.chartWrapper.getChart().container.innerHTML;
-  //   checkRef.current = true;
-  //   setChartImageURI(chartContainerHTML);
-  // }
-
   return (
     <>
       <div id="googlegraphs">
@@ -484,7 +476,7 @@ const Slide1 = ({ pptx, data }) => {
               setChartImageURI(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
-          ref={chartRef}
+          // ref={chartRef}
         />
       </div>
       <DataTable id="table" data={table} />
@@ -494,4 +486,4 @@ const Slide1 = ({ pptx, data }) => {
   );
 };
 
-export default Slide1;
+export default Slide;

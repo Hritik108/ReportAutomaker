@@ -2,8 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Chart } from "react-google-charts";
 import pptxgen from "pptxgenjs";
-import Slide1 from "./slides/slide1";
 import Slide2 from "./slides/slide2";
+import Slide from "./slides/slide1";
+import StoreWiseGridVisibility from "./slides/storewisegrid";
+import Slide4StoreWiseKTP from "./slides/storewisekpt";
 
 function App() {
   let data = {
@@ -55,13 +57,13 @@ function App() {
   const generateppt = () => {
     pptx.writeFile("output.pptx");
   };
-
+const arr = [<Slide pptx={pptx} data={data} />,<Slide2 pptx={pptx}/>,<StoreWiseGridVisibility pptx={pptx} />,<Slide4StoreWiseKTP pptx={pptx} />]
   return (
     <>
-      <Slide1 pptx={pptx} data={data} />
-      <Slide1 pptx={pptx} data={data} />
+      
+     {arr.map((a)=>a)} 
+      
       <button onClick={generateppt}>Generate PPT</button>
-      {/* <Slide1 pptx={pptx} data={data} /> */}
     </>
   );
 }

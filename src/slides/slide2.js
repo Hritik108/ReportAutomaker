@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { render } from "react-dom";
 import { Chart } from "react-google-charts";
-import pptxgen from "pptxgenjs";
 import { toPng } from "html-to-image";
 // import {setTimeout} from "timers/promises"
 // import { PptxGenJS } from "pptxgenjs";
@@ -150,7 +148,7 @@ const Table2 = ({ data }) => {
   );
 };
 
-const Slide1 = () => {
+const Slide2 = ({ pptx }) => {
   const countRef = useRef(0);
   // console.log("App body: "+ ++countRef.current)
   const [data, setData] = useState([]);
@@ -162,7 +160,62 @@ const Slide1 = () => {
   const chartRef = useRef(null);
   const chartImageURIRef = useRef(null);
   const checkRef = useRef(false);
-
+  const graphData = [
+    [
+      "", // Empty string for the space before the first bar
+      "Bolivia",
+      "Ecuador",
+      "Madagascar",
+      { role: "annotation" },
+      "Papua New Guinea",
+      { role: "annotation" },
+    ],
+    [
+      "2004/05", // X-axis label for the first bar
+      165,
+      938,
+      522,
+      522,
+      998,
+      998,
+    ],
+    [
+      "2005/06", // X-axis label for the second bar
+      135,
+      1120,
+      599,
+      599,
+      1268,
+      1268,
+    ],
+    [
+      "2006/07", // X-axis label for the third bar
+      157,
+      1167,
+      587,
+      587,
+      807,
+      807,
+    ],
+    [
+      "2007/08", // X-axis label for the fourth bar
+      139,
+      1110,
+      615,
+      615,
+      968,
+      968,
+    ],
+    [
+      "2008/09", // X-axis label for the fifth bar
+      136,
+      691,
+      629,
+      629,
+      1026,
+      1026,
+    ],
+  ];
   const table = [
     ["Month", "Swiggy (in lacs)", "Zomato (in lacs)", "Total (in lacs)"],
     ["Oct-2023", 19.9, 49.1, 69],
@@ -272,31 +325,18 @@ const Slide1 = () => {
   useEffect(() => {
     // console.log("UseEffect body: "+ ++countRef.current)
     const options = {
+      title: "Monthly Coffee Production by Country",
+      seriesType: "bars",
       series: {
-        0: { targetAxisIndex: 0, type: "bars" },
-        1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
-      },
-      vAxes: {
-        0: {
-          gridlines: { color: "transparent" },
-          viewWindow: { min: 0 },
-        },
+        2: { type: "line", lineWidth: 2 },
+        3: { type: "line", lineWidth: 2 },
       },
       legend: { position: "top" },
       annotations: {
-        alwaysOutside: true,
         textStyle: {
           fontSize: 14,
           bold: true,
         },
-      },
-      chartArea: {
-        left: 70,
-        top: 70,
-        bottom: 30,
-        right: 70,
-        width: "90%",
-        height: "90%",
       },
     };
 
@@ -316,21 +356,6 @@ const Slide1 = () => {
       },
     ];
 
-    setData([
-      [
-        "",
-        "Net Revenue",
-        { role: "annotation" },
-        "Orders",
-        { role: "annotation" },
-      ],
-      ["Jul-2023", 94.2, 94.2, 19502, 19502],
-      ["Aug-2023", 92.2, 92.2, 19715, 19715],
-      ["Sep-2023", 104.0, 104.0, 21665, 21665],
-      ["Oct-2023", 118.1, 118.1, 25366, 25366],
-      ["Nov-2023", 127.3, 127.3, 25802, 25802],
-      ["Dec-2023", 150.0, 150.0, 31199, 31199],
-    ]);
 
     setOptions(options);
     console.log("before setting chart_events in setChartEvents(chart_events) ");
@@ -370,7 +395,7 @@ const Slide1 = () => {
     console.log(chartImageURI);
     console.log("hello");
     console.log(chartImageURI);
-    const pptx = new pptxgen();
+    // const pptx = new pptxgen();
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
     // setChartImageURI(chartRef.current?.chart);
@@ -405,7 +430,7 @@ const Slide1 = () => {
               h: 4.2,
             });
 
-            slide.addText("Overall Revenues - month on month", {
+            slide.addText("Pg 3 Overall Revenues - month on month", {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -475,8 +500,8 @@ const Slide1 = () => {
               }
             );
             slide.addImage(table2ImageOptions);
-            pptx.writeFile("output.pptx");
-            console.log("hello");
+            // pptx.writeFile("output.pptx");
+            console.log("slide2 rendered")
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -498,15 +523,24 @@ const Slide1 = () => {
       <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
-          data={data}
+          data={graphData}
           options={options}
           graph_id="ScatterChart"
           width="70%"
           height={"400px"}
           legend_toggle={true}
           chartPackage={["controls"]}
-          chartEvents={chartEvents}
-          ref={chartRef}
+          // getChartWrapper={(rcatChart) => {
+          //   setTimeout(() => {
+          //     setChartImageURI(rcatChart.visualization.container.innerHTML);
+          //   }, 5000); // Wait for 5000 milliseconds (5 seconds)
+          // }}
+          getChartWrapper={(rcatChart) => {
+            setTimeout(() => {
+              setChartImageURI(rcatChart.visualization.container.innerHTML);
+            }, 5000); // Wait for 5000 milliseconds (5 seconds)
+          }}
+          // ref={chartRef}
           onload={() => console.log("char hello")}
         />
       </div>
@@ -514,14 +548,14 @@ const Slide1 = () => {
       <Table1 id="table1" data={table1} />
       <Table2 id="table2" data={table2} />
       <div>
-        <h2>Chart as png</h2>
+        {/* <h2>Chart as png</h2> */}
         <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
       </div>
-      <div>
+      {/* <div>
         <button onClick={generateppt}>Generate PPT</button>
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default Slide1;
+export default Slide2;
