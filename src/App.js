@@ -6,6 +6,7 @@ import Slide2 from "./slides/slide2";
 import Slide from "./slides/slide1";
 import StoreWiseGridVisibility from "./slides/storewisegrid";
 import Slide4StoreWiseKTP from "./slides/storewisekpt";
+import StoreWiseOrderIDWiseRatingSplit from "./slides/StoreWise-OrderIDWiseRatingSplit";
 
 function App() {
   let data = {
@@ -57,12 +58,13 @@ function App() {
   const generateppt = () => {
     pptx.writeFile("output.pptx");
   };
-const arr = [<Slide pptx={pptx} data={data} />,<Slide2 pptx={pptx}/>,<StoreWiseGridVisibility pptx={pptx} />,<Slide4StoreWiseKTP pptx={pptx} />]
+  // const arr = [<Slide pptx={pptx}/>,<Slide2 pptx={pptx}/>,<StoreWiseGridVisibility pptx={pptx}/>,<Slide4StoreWiseKTP pptx={pptx}/>,<StoreWiseOrderIDWiseRatingSplit pptx={pptx} />]
+  const arr = [<StoreWiseOrderIDWiseRatingSplit pptx={pptx} />];
+
   return (
     <>
-      
-     {arr.map((a)=>a)} 
-      
+      {arr.map((a) => a)}
+
       <button onClick={generateppt}>Generate PPT</button>
     </>
   );

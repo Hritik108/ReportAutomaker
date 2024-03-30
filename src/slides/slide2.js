@@ -356,7 +356,6 @@ const Slide2 = ({ pptx }) => {
       },
     ];
 
-
     setOptions(options);
     console.log("before setting chart_events in setChartEvents(chart_events) ");
     // console.log(chart_events.length);
@@ -388,13 +387,13 @@ const Slide2 = ({ pptx }) => {
 
   useEffect(() => {
     console.log("data:");
-    console.log(data);
+    // console.log(data);
   }, [data]);
 
   useEffect(() => {
-    console.log(chartImageURI);
+    // console.log(chartImageURI);
     console.log("hello");
-    console.log(chartImageURI);
+    // console.log(chartImageURI);
     // const pptx = new pptxgen();
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
@@ -416,7 +415,7 @@ const Slide2 = ({ pptx }) => {
         console.log(svg);
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-        console.log(imageuri);
+        // console.log(imageuri);
 
         await convertSvgToPng(imageuri)
           .then((pngDataUri) => {
@@ -454,7 +453,7 @@ const Slide2 = ({ pptx }) => {
         const table1svgDataUri = convertTableToSvg(table1Element);
         await convertSvgToPng(table1svgDataUri)
           .then((pngDataUri) => {
-            console.log(pngDataUri);
+            // console.log(pngDataUri);
             const table1ImageOptions = {
               data: pngDataUri,
               x: 6.7,
@@ -477,7 +476,7 @@ const Slide2 = ({ pptx }) => {
 
         await convertSvgToPng(table2svgDataUri)
           .then((pngDataUri) => {
-            console.log(pngDataUri);
+            // console.log(pngDataUri);
             const table2ImageOptions = {
               data: pngDataUri,
               x: 6.7,
@@ -501,7 +500,7 @@ const Slide2 = ({ pptx }) => {
             );
             slide.addImage(table2ImageOptions);
             // pptx.writeFile("output.pptx");
-            console.log("slide2 rendered")
+            console.log("slide2 rendered");
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -525,7 +524,7 @@ const Slide2 = ({ pptx }) => {
           chartType="ScatterChart"
           data={graphData}
           options={options}
-          graph_id="ScatterChart"
+          graph_id="ScatterChart2"
           width="70%"
           height={"400px"}
           legend_toggle={true}

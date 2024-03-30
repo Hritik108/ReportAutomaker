@@ -126,16 +126,74 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-const Slide = ({ pptx, data }) => {
+const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
   const countRef = useRef(0);
 
   const [options, setOptions] = useState({});
   const [chartEvents, setChartEvents] = useState([]);
-  const [chartImageURI, setChartImageURI] = useState("");
+  const [chartImageURI1, setChartImageURI1] = useState("");
+  const [chartImageURI2, setChartImageURI2] = useState("");
   const chartRef = useRef(null);
   const checkRef = useRef(false);
-  const graphData = data.graph.graphdata;
-  const table = data.table;
+//   const graphData = data.graph.graphdata;
+  const graphData = [
+    [
+      "City",
+      "Category 1",
+      { role: "annotation" },
+      "Category 2",
+      { role: "annotation" },
+      "Category 3",
+      { role: "annotation" },
+    ],
+    [
+      "New York City, NY",
+      { v: 4000000, f: "4M" },
+      "4M",
+      { v: 3000000, f: "3M" },
+      "3M",
+      { v: 1000000, f: "1M" },
+      "1M",
+    ],
+    [
+      "Los Angeles, CA",
+      { v: 2000000, f: "2M" },
+      "2M",
+      { v: 1500000, f: "1.5M" },
+      "1.5M",
+      { v: 800000, f: "800K" },
+      "800K",
+    ],
+    [
+      "Chicago, IL",
+      { v: 1500000, f: "1.5M" },
+      "1.5M",
+      { v: 1000000, f: "1M" },
+      "1M",
+      { v: 600000, f: "600K" },
+      "600K",
+    ],
+    [
+      "Houston, TX",
+      { v: 1200000, f: "1.2M" },
+      "1.2M",
+      { v: 800000, f: "800K" },
+      "800K",
+      { v: 400000, f: "400K" },
+      "400K",
+    ],
+    [
+      "Philadelphia, PA",
+      { v: 1000000, f: "1M" },
+      "1M",
+      { v: 700000, f: "700K" },
+      "700K",
+      { v: 300000, f: "300K" },
+      "300K",
+    ],
+  ];
+  
+//   const table = data.table;
 
   const mom = [
     ["Revenue", "-100%"],
@@ -222,53 +280,52 @@ const Slide = ({ pptx, data }) => {
 
   useEffect(() => {
     const options = {
-      series: {
-        0: { targetAxisIndex: 0, type: "bars" },
-        1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
-      },
-      vAxes: {
-        0: {
+        title: "Population of Largest U.S. Cities",
+        hAxis: {
+          title: "",
           gridlines: { color: "transparent" },
-          viewWindow: { min: 0 },
         },
-      },
-      legend: { position: "top" },
-      annotations: {
-        alwaysOutside: true,
-        textStyle: {
-          fontSize: 14,
-          bold: true,
+        vAxis: {
+          title: "",
+          gridlines: { color: "transparent" },
         },
-      },
-      chartArea: {
-        left: 70,
-        top: 70,
-        bottom: 30,
-        right: 70,
-        width: "90%",
-        height: "90%",
-      },
-    };
+        legend: "none", // Hide legends
+        isStacked: true,
+        annotations: {
+          textStyle: {
+            fontSize: 7, // Adjust the font size of annotations
+          },
+        },
+        chartArea: {
+          left: 70,
+          top: 70,
+          bottom: 30,
+          right: 70,
+          width: "100%",
+          height: "70%",
+        },
+        colors: ["rgb(119, 217, 112)", "rgb(255, 152, 0)", "rgb(250, 112, 112)"], // Specify the colors for each category
+      };
 
-    const chart_events = [
-      {
-        eventName: "ready",
-        callback: (rcatChart) => {
-          if (!checkRef.current) {
-            // Check the ref value
-            const chartContainerHTML =
-              rcatChart.chartWrapper.getChart().container.innerHTML;
-            checkRef.current = true; // Update the ref value
+    // const chart_events = [
+    //   {
+    //     eventName: "ready",
+    //     callback: (rcatChart) => {
+    //       if (!checkRef.current) {
+    //         // Check the ref value
+    //         const chartContainerHTML =
+    //           rcatChart.chartWrapper.getChart().container.innerHTML;
+    //         checkRef.current = true; // Update the ref value
 
-            setChartImageURI(chartContainerHTML); // Update chartImageURI only if it has changed
-          }
-        },
-      },
-    ];
+    //         setChartImageURI(chartContainerHTML); // Update chartImageURI only if it has changed
+    //       }
+    //     },
+    //   },
+    // ];
 
     setOptions(options);
 
-    setChartEvents(chart_events);
+    // setChartEvents(chart_events);
   }, []);
   const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
@@ -298,29 +355,33 @@ const Slide = ({ pptx, data }) => {
     slide.background = { fill: "000000" };
 
     const node = document.createElement("div");
-    node.innerHTML = chartImageURI;
+    node.innerHTML = chartImageURI1;
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(chartImageURI, "text/html");
+    const doc = parser.parseFromString(chartImageURI1, "text/html");
     const svgs = doc.querySelectorAll("svg");
 
     const images = [];
 
     svgs.forEach(async (svg, index) => {
       try {
+       
         const svgData = new XMLSerializer().serializeToString(svg);
-        const base64Image = btoa(svgData);
-
+        console.log("hello")
+        console.log(svgData)
+        const utf8Data = unescape(encodeURIComponent(svgData));
+        const base64Image = btoa(utf8Data);
+        
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-
+        console.log(imageuri)
         await convertSvgToPng(imageuri)
           .then((pngDataUri) => {
             slide.addImage({
               data: pngDataUri,
               x: 0.6,
               y: 1,
-              w: 4.5,
-              h: 3,
+              w: 6,
+              h: 2,
             });
 
             slide.addText("Overall Revenues - month on month", {
@@ -351,87 +412,13 @@ const Slide = ({ pptx, data }) => {
 
           .catch((error) => {});
 
-        //main table
-        const tableElement = document.getElementById("table");
-        const svgDataUri = convertTableToSvg(tableElement);
 
-        await convertSvgToPng(svgDataUri)
-          .then((pngDataUri) => {
-            slide.addImage({
-              data: pngDataUri,
-              x: 5.9,
-              y: 1,
-              w: 3.5,
-              h: 3,
-            });
-          })
-          .catch((error) => {});
 
-        //mom table
-        const momtableElement = document.getElementById("momtable");
-
-        const momsvgDataUri = convertTableToSvg(momtableElement);
-        await convertSvgToPng(momsvgDataUri)
-          .then((pngDataUri) => {
-            const momImageOptions = {
-              data: pngDataUri,
-              x: 0.6,
-              y: 4.5,
-              w: 1.5,
-              h: 0.7,
-            };
-
-            slide.addImage(momImageOptions);
-            slide.addText("MOM", {
-              y: 4,
-              x: 1,
-              w: 0.75,
-              h: 0.75,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 15,
-              bold: true,
-            });
-            // pptx.writeFile("output.pptx");
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-
-        //mom2 table
-        const mom2tableElement = document.getElementById("momtable");
-
-        const mom2svgDataUri = convertTableToSvg(mom2tableElement);
-        await convertSvgToPng(mom2svgDataUri)
-          .then((pngDataUri) => {
-            const momImageOptions = {
-              data: pngDataUri,
-              x: 3,
-              y: 4.5,
-              w: 1.7,
-              h: 0.7,
-            };
-            slide.addText("MO2M", {
-              y: 4,
-              x: 3.45,
-              w: 1,
-              h: 0.75,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 15,
-              bold: true,
-            });
-            slide.addImage(momImageOptions);
-            console.log("slide1 rendered")
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
       } catch (error) {
         console.error("Error converting SVG to image:", error);
       }
     });
-  }, [chartImageURI]);
+  }, [chartImageURI1]);
 
   const callme = () => (rcatChart) => {
     console.log(rcatChart);
@@ -448,6 +435,77 @@ const Slide = ({ pptx, data }) => {
     },
   ];
 
+
+  useEffect(() => {
+    const slide = pptx.addSlide();
+    slide.background = { fill: "000000" };
+
+    const node = document.createElement("div");
+    node.innerHTML = chartImageURI2;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(chartImageURI2, "text/html");
+    const svgs = doc.querySelectorAll("svg");
+
+    const images = [];
+
+    svgs.forEach(async (svg, index) => {
+      try {
+       
+        const svgData = new XMLSerializer().serializeToString(svg);
+        console.log("hello")
+        console.log(svgData)
+        const utf8Data = unescape(encodeURIComponent(svgData));
+        const base64Image = btoa(utf8Data);
+        
+        const imageuri = `data:image/svg+xml;base64,${base64Image}`;
+        console.log(imageuri)
+        await convertSvgToPng(imageuri)
+          .then((pngDataUri) => {
+            slide.addImage({
+              data: pngDataUri,
+              x: 0.6,
+              y: 3,
+              w: 6,
+              h: 2,
+            });
+
+            slide.addText("Overall Revenues - month on month", {
+              y: -0.5,
+              x: 0.6,
+              w: 10,
+              h: 2,
+              color: "FFFFFF",
+              fontFace: "Calibri",
+              fontSize: 30,
+              bold: true,
+            });
+
+            slide.addText(
+              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+              {
+                y: 4.5,
+                x: 2.2,
+                w: 10,
+                h: 2,
+                color: "FFFFFF",
+                fontFace: "Calibri",
+                fontSize: 8,
+              }
+            );
+            //  pptx.writeFile("output.pptx");
+          })
+
+          .catch((error) => {});
+
+
+
+      } catch (error) {
+        console.error("Error converting SVG to image:", error);
+      }
+    });
+  }, [chartImageURI2]);
+
   useEffect(() => {
     // side effect within useEffect is bad this doesn't get cleaned up on comonent unmount, just for demo purposes
     console.log(" I AM CALLED");
@@ -462,28 +520,38 @@ const Slide = ({ pptx, data }) => {
   return (
     <>
       <div id="googlegraphs">
-        <Chart
-          chartType="ScatterChart"
+      <Chart
+          chartType="BarChart"
           data={graphData}
           options={options}
-          graph_id="ScatterChart1"
-          width="70%"
+          graph_id="verticalstackBarChart1"
           height={"400px"}
           legend_toggle={true}
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
+              setChartImageURI1(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
-          // ref={chartRef}
+        />
+          <Chart
+          chartType="BarChart"
+          data={graphData}
+          options={{...options ,isStacked: "percent"}}
+          graph_id="verticalstackBarChart2"
+          height={"400px"}
+          legend_toggle={true}
+          chartPackage={["controls"]}
+          getChartWrapper={(rcatChart) => {
+            setTimeout(() => {
+              setChartImageURI2(rcatChart.visualization.container.innerHTML);
+            }, 5000); // Wait for 5000 milliseconds (5 seconds)
+          }}
         />
       </div>
-      <DataTable id="table" data={table} />
-      <MomTable id="momtable" data={mom} />
-      <Mom2Table id="mom2table" data={mom2} />
+
     </>
   );
 };
 
-export default Slide;
+export default StoreWiseOrderIDWiseRatingSplit;
