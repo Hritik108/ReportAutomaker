@@ -148,33 +148,39 @@ const Table2 = ({ data }) => {
   );
 };
 
-const Slide2 = ({ data,pptx,title }) => {
+const Slide2 = ({ data, pptx, title }) => {
   // console.log("App body: "+ ++countRef.current)
 
   const [chartImageURI, setChartImageURI] = useState("");
   const chartRef = useRef(null);
-  const table1 = data.table1
-  const table2 = data.table2
-  const graphData = data.graph 
-  console.log('2 Slide2')
+  const table1 = data.table1;
+  const table2 = data.table2;
+  const graphData = data.graph;
+  console.log("2 Slide2");
   const options = {
     title: "",
     seriesType: "bars",
     series: {
-      2: { type: "line", lineWidth: 2 },
-      3: { type: "line", lineWidth: 2 },
+      0: { tooltip: false },
+      1: { tooltip: false },
+      2: { type: "line", lineWidth: 2, targetAxisIndex: 1, tooltip: false },
+      3: { type: "line", lineWidth: 2, targetAxisIndex: 1, tooltip: false },
+    },
+    vAxes: {
+      0: {
+        gridlines: { color: "transparent" },
+        viewWindow: { min: 0 },
+      },
     },
     legend: { position: "top" },
     annotations: {
-        alwaysOutside: true,
-        textStyle: {
-          fontSize: 14,
-          bold: true,
-        },
+      alwaysOutside: true,
+      textStyle: {
+        fontSize: 14,
+        bold: true,
       },
+    },
   };
-
-  
 
   const convertTableToSvg = (tableElement) => {
     const cellWidth = 75;
@@ -276,129 +282,127 @@ const Slide2 = ({ data,pptx,title }) => {
     });
   };
 
-
-
   useEffect(() => {
     // console.log(chartImageURI);
-    if(chartImageURI !== ""){
-    console.log("hello");
-    // console.log(chartImageURI);
-    // const pptx = new pptxgen();
-    const slide = pptx.addSlide();
-    slide.background = { fill: "000000" };
-    // setChartImageURI(chartRef.current?.chart);
-    const node = document.createElement("div");
-    node.innerHTML = chartImageURI;
-    // console.log(chartImageURI);
-    // console.log(node.innerHTML);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(chartImageURI, "text/html");
-    const svgs = doc.querySelectorAll("svg");
+    if (chartImageURI !== "") {
+      console.log("hello");
+      // console.log(chartImageURI);
+      // const pptx = new pptxgen();
+      const slide = pptx.addSlide();
+      slide.background = { fill: "000000" };
+      // setChartImageURI(chartRef.current?.chart);
+      const node = document.createElement("div");
+      node.innerHTML = chartImageURI;
+      // console.log(chartImageURI);
+      // console.log(node.innerHTML);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(chartImageURI, "text/html");
+      const svgs = doc.querySelectorAll("svg");
 
-    const images = [];
-    console.log(svgs);
-    svgs.forEach(async (svg, index) => {
-      try {
-        const svgData = new XMLSerializer().serializeToString(svg);
-        const base64Image = btoa(svgData);
-        console.log(svg);
+      const images = [];
+      console.log(svgs);
+      svgs.forEach(async (svg, index) => {
+        try {
+          const svgData = new XMLSerializer().serializeToString(svg);
+          const base64Image = btoa(svgData);
+          console.log(svg);
 
-        const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-        // console.log(imageuri);
+          const imageuri = `data:image/svg+xml;base64,${base64Image}`;
+          // console.log(imageuri);
 
-        await convertSvgToPng(imageuri)
-          .then((pngDataUri) => {
-            // console.log(pngDataUri);
+          await convertSvgToPng(imageuri)
+            .then((pngDataUri) => {
+              // console.log(pngDataUri);
 
-            slide.addImage({
-              data: pngDataUri,
-              x: 0.3,
-              y: 1,
-              w: 6,
-              h: 4.2,
-            });
+              slide.addImage({
+                data: pngDataUri,
+                x: 0.3,
+                y: 1,
+                w: 6,
+                h: 4.2,
+              });
 
-            slide.addText("Pg 3 Overall Revenues - month on month", {
-              y: -0.5,
-              x: 0.6,
-              w: 10,
-              h: 2,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 30,
-              bold: true,
-            });
-
-            //  pptx.writeFile("output.pptx");
-          })
-
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-
-        //mom table
-        const table1Element = document.getElementById("table1");
-        // console.log(table1Element);
-        const table1svgDataUri = convertTableToSvg(table1Element);
-        await convertSvgToPng(table1svgDataUri)
-          .then((pngDataUri) => {
-            // console.log(pngDataUri);
-            const table1ImageOptions = {
-              data: pngDataUri,
-              x: 6.7,
-              y: 1,
-              w: 3,
-              h: 2,
-            };
-
-            console.log(table1ImageOptions);
-
-            slide.addImage(table1ImageOptions);
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-        console.log("hello");
-        //mom2 table
-        const table2Element = document.getElementById("table2");
-        const table2svgDataUri = convertTableToSvg(table2Element);
-
-        await convertSvgToPng(table2svgDataUri)
-          .then((pngDataUri) => {
-            // console.log(pngDataUri);
-            const table2ImageOptions = {
-              data: pngDataUri,
-              x: 6.7,
-              y: 3.2,
-              w: 3,
-              h: 2,
-            };
-
-            // console.log(table2ImageOptions);
-            slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
-                y: 4.5,
-                x: 2.2,
+              slide.addText("Pg 3 Overall Revenues - month on month", {
+                y: -0.5,
+                x: 0.6,
                 w: 10,
                 h: 2,
                 color: "FFFFFF",
                 fontFace: "Calibri",
-                fontSize: 8,
-              }
-            );
-            slide.addImage(table2ImageOptions);
-            // pptx.writeFile("output.pptx");
-            console.log("slide2 rendered");
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-      } catch (error) {
-        console.error("Error converting SVG to image:", error);
-      }
-    });
-  }
+                fontSize: 30,
+                bold: true,
+              });
+
+              //  pptx.writeFile("output.pptx");
+            })
+
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
+
+          //mom table
+          const table1Element = document.getElementById("table1");
+          // console.log(table1Element);
+          const table1svgDataUri = convertTableToSvg(table1Element);
+          await convertSvgToPng(table1svgDataUri)
+            .then((pngDataUri) => {
+              // console.log(pngDataUri);
+              const table1ImageOptions = {
+                data: pngDataUri,
+                x: 6.7,
+                y: 1,
+                w: 3,
+                h: 2,
+              };
+
+              console.log(table1ImageOptions);
+
+              slide.addImage(table1ImageOptions);
+            })
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
+          console.log("hello");
+          //mom2 table
+          const table2Element = document.getElementById("table2");
+          const table2svgDataUri = convertTableToSvg(table2Element);
+
+          await convertSvgToPng(table2svgDataUri)
+            .then((pngDataUri) => {
+              // console.log(pngDataUri);
+              const table2ImageOptions = {
+                data: pngDataUri,
+                x: 6.7,
+                y: 3.2,
+                w: 3,
+                h: 2,
+              };
+
+              // console.log(table2ImageOptions);
+              slide.addText(
+                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+                {
+                  y: 4.5,
+                  x: 2.2,
+                  w: 10,
+                  h: 2,
+                  color: "FFFFFF",
+                  fontFace: "Calibri",
+                  fontSize: 8,
+                }
+              );
+              slide.addImage(table2ImageOptions);
+              // pptx.writeFile("output.pptx");
+              console.log("slide2 rendered");
+            })
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
+        } catch (error) {
+          console.error("Error converting SVG to image:", error);
+        }
+      });
+    }
   }, [chartImageURI]);
 
   const generateppt = async () => {
