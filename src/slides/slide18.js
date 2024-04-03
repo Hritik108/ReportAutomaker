@@ -77,11 +77,10 @@ const Table182 = ({ data }) => {
     );
 };
 
-const Slide18 = ({ pptx }) => {
+const Slide18 = ({ pptx ,data,title}) => {
     const countRef = useRef(0);
     // console.log("App body: "+ ++countRef.current)
-    const [data, setData] = useState([]);
-    const [options, setOptions] = useState({});
+    // const [data, setData] = useState([]);
     const [chartEvents, setChartEvents] = useState([]);
     const [chartImageURI, setChartImageURI] = useState("");
     const [chartImage, setChartImage] = useState("");
@@ -89,13 +88,15 @@ const Slide18 = ({ pptx }) => {
     const chartRef = useRef(null);
     const chartImageURIRef = useRef(null);
     const checkRef = useRef(false);
-    const graphData = [
-        ["sub zone", "Total Food Issue", { role: "annotation" }, "Quality issue", "Quantity issue", "packaging", "wrong item", "special inst issue", "Bad order"],
-        ["Malad west", 31, 31, 31, 1, 2, 4, 0, 78],
-        ["dadar", 10,10, 31, 1, 34, 4, 0, 28],
-        ["navi mumbai", 3,3, 31, 1, 3, 4, 0, 18],
-        ["bkc", 20,20, 31, 1, 2, 4, 0, 8]
-    ];
+    console.log('5 slide18')
+    
+    // const graphData = [
+    //     ["sub zone", "Total Food Issue", { role: "annotation" }, "Quality issue", "Quantity issue", "packaging", "wrong item", "special inst issue", "Bad order"],
+    //     ["Malad west", 31, 31, 31, 1, 2, 4, 0, 78],
+    //     ["dadar", 10,10, 31, 1, 34, 4, 0, 28],
+    //     ["navi mumbai", 3,3, 31, 1, 3, 4, 0, 18],
+    //     ["bkc", 20,20, 31, 1, 2, 4, 0, 8]
+    // ];
     const table1 = [
         ["Total orders", 0],
         ["ORS", 0],
@@ -120,10 +121,55 @@ const Slide18 = ({ pptx }) => {
         ["others", 0],
         ["Total", 100]
     ];
-  
-    const convertTableToSvg = (tableElement) => {
-      const cellWidth = 75;
-      const cellHeight = 20;
+    
+    const graphData = data.graph
+   
+
+    const options = {
+      title: "Monthly Coffee Production by Country",
+  vAxis: { title: "Cups" },
+  hAxis: { title: "Month" },
+  seriesType: "bars",
+  series: { 5: { type: "line" } },
+  // legend: { position: "top" }, // Move legend to the top
+  annotations: {
+    textStyle: {
+      fontSize: 12,
+      color: "#000000", // Annotation text color
+    },
+  },
+    };
+
+    // const graphData = [
+    //   [
+    //     "sub zone",
+    //     "Total Food Issue",
+    //     { role: "annotation" },
+    //     "Quality issue",
+    //     { role: "annotation" },
+    //     "Quantity issue",
+    //     { role: "annotation" },
+    //     "packaging",
+    //     { role: "annotation" },
+    //     "wrong item",
+    //     { role: "annotation" }, // Annotations for each data point
+    //     "special inst issue",
+    //     { role: "annotation" },
+    //     "wrong item",
+    //     { role: "Bad order" },
+    //   ],
+    //   ["Malad west", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
+    //   ["dadar", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
+    //   ["navi mumbai", 135, 135, 1120, 1120, 599, 599, 1268, 1268, 288, 288, 165, 165, 938, 938,],
+    //   ["bkc", 157, 157, 1167, 1167, 587, 587, 807, 807, 397, 397, 165, 165, 938, 938,],
+    //   ["2007/08", 139, 139, 1110, 1110, 615, 615, 968, 968, 215, 215, 165, 165, 938, 938,],
+    //   ["2008/09", 136, 136, 691, 691, 629, 629, 1026, 1026, 366, 366, 165, 165, 938, 938,],
+    // ];
+
+
+    const convertTableToSvg = (tableElement,height) => {
+      let cellWidth = 75;
+      const cellHeight = height;
       const borderWidth = 1;
       const fontSize = 9;
   
@@ -149,7 +195,15 @@ const Slide18 = ({ pptx }) => {
             "http://www.w3.org/2000/svg",
             "rect"
           );
-          rect.setAttribute("x", j * cellWidth);
+          if(j== 0){
+            cellWidth = 120
+            rect.setAttribute("x", j * cellWidth);
+          }
+          else{
+  
+            cellWidth = 50
+            rect.setAttribute("x", ((j-1) * cellWidth)+100);
+          } 
           rect.setAttribute("y", i * cellHeight);
           rect.setAttribute("width", cellWidth);
           rect.setAttribute("height", cellHeight);
@@ -174,12 +228,18 @@ const Slide18 = ({ pptx }) => {
             "http://www.w3.org/2000/svg",
             "text"
           );
-          text.setAttribute("x", j * cellWidth + cellWidth / 2);
+          // text.setAttribute("x", j * cellWidth + 5);
+          if(j==0){
+            text.setAttribute("x", j * cellWidth + 2);
+          }
+          else{
+            text.setAttribute("x", ((j-1) * cellWidth+120) + 2);
+          }
           text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
           text.setAttribute("fill", "white");
           text.setAttribute("font-size", fontSize);
           text.setAttribute("font-family", "Calibri");
-          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("text-anchor", "start");
           text.textContent = cellContent;
           svg.appendChild(text);
         }
@@ -197,45 +257,7 @@ const Slide18 = ({ pptx }) => {
       return dataUri;
     };
   
-    useEffect(() => {
-      // console.log("UseEffect body: "+ ++countRef.current)
-      const options = {
-        // chart: {
-        //   title: "Company Performance",
-        //   subtitle: "Sales, Expenses, and Profit: 2014-2017",
-        // },
-        legend: { position: "top"},
-        annotations: {
-            alwaysOutside: true,
-            textStyle: {
-              fontSize: 14,
-              bold: true,
-            },
-        }
-      };
-  
-      const chart_events = [
-        {
-          eventName: "ready",
-          callback: (rcatChart) => {
-            if (!checkRef.current) {
-              // Check the ref value
-              const chartContainerHTML =
-                rcatChart.chartWrapper.getChart().container.innerHTML;
-              checkRef.current = true; // Update the ref value
-              console.log(chartContainerHTML);
-              setChartImageURI(chartContainerHTML); // Update chartImageURI only if it has changed
-            }
-          },
-        },
-      ];
-  
-  
-      setOptions(options);
-      console.log("before setting chart_events in setChartEvents(chart_events) ");
-      // console.log(chart_events.length);
-      setChartEvents(chart_events);
-    }, []);
+
     const convertSvgToPng = (svgDataUri) => {
       return new Promise((resolve, reject) => {
         const image = new Image();
@@ -260,23 +282,25 @@ const Slide18 = ({ pptx }) => {
       });
     };
   
-    useEffect(() => {
-      console.log("data:");
-      console.log(data);
-    }, [data]);
+    // useEffect(() => {
+    //   console.log("data:");
+    //   console.log(data);
+    // }, [data]);
   
     useEffect(() => {
-      console.log(chartImageURI);
-      console.log("hello");
-      console.log(chartImageURI);
+      if(chartImageURI !== "")
+      {
+      // console.log(chartImageURI);
+      // console.log("hello");
+      // console.log(chartImageURI);
       // const pptx = new pptxgen();
       const slide = pptx.addSlide();
       slide.background = { fill: "000000" };
       // setChartImageURI(chartRef.current?.chart);
       const node = document.createElement("div");
       node.innerHTML = chartImageURI;
-      console.log(chartImageURI);
-      console.log(node.innerHTML);
+      // console.log(chartImageURI);
+      // console.log(node.innerHTML);
       const parser = new DOMParser();
       const doc = parser.parseFromString(chartImageURI, "text/html");
       const svgs = doc.querySelectorAll("svg");
@@ -325,7 +349,7 @@ const Slide18 = ({ pptx }) => {
           //mom table
           const table1Element = document.getElementById("table181");
           console.log(table1Element);
-          const table1svgDataUri = convertTableToSvg(table1Element);
+          const table1svgDataUri = convertTableToSvg(table1Element,15);
           await convertSvgToPng(table1svgDataUri)
             .then((pngDataUri) => {
               console.log(pngDataUri);
@@ -334,7 +358,7 @@ const Slide18 = ({ pptx }) => {
                 x: 6.7,
                 y: 0.5,
                 w: 3,
-                h: 1,
+                h: 0.75,
               };
   
               console.log(table1ImageOptions);
@@ -347,7 +371,7 @@ const Slide18 = ({ pptx }) => {
           console.log("hello");
           //mom2 table
           const table2Element = document.getElementById("table182");
-          const table2svgDataUri = convertTableToSvg(table2Element);
+          const table2svgDataUri = convertTableToSvg(table2Element,12);
   
           await convertSvgToPng(table2svgDataUri)
             .then((pngDataUri) => {
@@ -355,7 +379,7 @@ const Slide18 = ({ pptx }) => {
               const table2ImageOptions = {
                 data: pngDataUri,
                 x: 6.7,
-                y: 1.5,
+                y: 1.3,
                 w: 3,
                 h: 4,
               };
@@ -383,7 +407,7 @@ const Slide18 = ({ pptx }) => {
         } catch (error) {
           console.error("Error converting SVG to image:", error);
         }
-      });
+      });}
     }, [chartImageURI]);
   
     const generateppt = async () => {
@@ -393,10 +417,10 @@ const Slide18 = ({ pptx }) => {
   
     return (
       <div>
-        <h2>Welcome to React{++countRef.current}</h2>
+        <h2>{title}</h2>
         <div id="googlegraphs18">
           <Chart
-            chartType="Bar"
+            chartType="ComboChart"
             data={graphData}
             options={options}
             graph_id="ScatterChart18"
@@ -404,18 +428,11 @@ const Slide18 = ({ pptx }) => {
             height={"400px"}
             legend_toggle={true}
             chartPackage={["controls"]}
-            // getChartWrapper={(rcatChart) => {
-            //   setTimeout(() => {
-            //     setChartImageURI(rcatChart.visualization.container.innerHTML);
-            //   }, 5000); // Wait for 5000 milliseconds (5 seconds)
-            // }}
             getChartWrapper={(rcatChart) => {
               setTimeout(() => {
                 setChartImageURI(rcatChart.visualization.container.innerHTML);
               }, 5000); // Wait for 5000 milliseconds (5 seconds)
             }}
-            // // ref={chartRef}
-            // onload={() => console.log("char hello")}
           />
         </div>
   

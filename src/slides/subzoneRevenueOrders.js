@@ -1,41 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
+import ReactDOM from "react-dom";
 import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
-// import {setTimeout} from "timers/promises"
-// import { PptxGenJS } from "pptxgenjs";
-
-let data = {
-  title: "Overall Revenues - month on month",
-  table: [
-    ["Month", "Swiggy (in lacs)", "Zomato (in lacs)", "Total (in lacs)"],
-    ["Oct-2023", 19.9, 49.1, 69],
-    ["Nov-2023", 0, 0, 0],
-    ["Dec-2023", 0, 0, 0],
-    ["Jan-2024", 0, 0, 0],
-    ["Feb-2024", 0, 0, 0],
-    ["Mar-2024", 0, 0, 0],
-  ],
-  graph: {
-    months: [
-      "October-2023",
-      "November-2023",
-      "December-2023",
-      "January-2024",
-      "February-2024",
-      "March-2024",
-    ],
-    "Net Revenue (in lacs)": [6895410.499047618, 0, 0, 0, 0, 0],
-    Orders: [14404, 0, 0, 0, 0, 0],
-  },
-  mom: {
-    Revenue: 0,
-    Orders: 0,
-  },
-  mo2m: {
-    Revenue: 0,
-    Orders: 0,
-  },
-};
+import { type } from "@testing-library/user-event/dist/type";
+import { render } from "@testing-library/react";
 
 const DataTable = ({ data }) => {
   const cellWidth = 120;
@@ -74,7 +42,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const Table1 = ({ data }) => {
+const MomTable = ({ data }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -88,7 +56,7 @@ const Table1 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table1"
+      id="Slide26momtable"
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -111,7 +79,7 @@ const Table1 = ({ data }) => {
   );
 };
 
-const Table2 = ({ data }) => {
+const Mo2mTable = ({ data }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -125,7 +93,7 @@ const Table2 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table2"
+      id="Slide26mo2mtable"
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -148,37 +116,46 @@ const Table2 = ({ data }) => {
   );
 };
 
-const Slide2 = ({ data,pptx,title }) => {
-  // console.log("App body: "+ ++countRef.current)
+const Slide26 = ({ pptx, data,title }) => {
+
 
   const [chartImageURI, setChartImageURI] = useState("");
-  const chartRef = useRef(null);
-  const table1 = data.table1
-  const table2 = data.table2
-  const graphData = data.graph 
-  console.log('2 Slide2')
+  const graphData = data.graph;
+  const mom = data.mom;
+  const mom2 = data.mo2m
+
   const options = {
-    title: "",
-    seriesType: "bars",
     series: {
-      2: { type: "line", lineWidth: 2 },
-      3: { type: "line", lineWidth: 2 },
+      0: { targetAxisIndex: 0, type: "bars" },
+      1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
+    },
+    vAxes: {
+      0: {
+        gridlines: { color: "transparent" },
+        viewWindow: { min: 0 },
+      },
     },
     legend: { position: "top" },
     annotations: {
-        alwaysOutside: true,
-        textStyle: {
-          fontSize: 14,
-          bold: true,
-        },
+      alwaysOutside: true,
+      textStyle: {
+        fontSize: 14,
+        bold: true,
       },
+    },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      height: "90%",
+    },
   };
 
-  
-
   const convertTableToSvg = (tableElement) => {
-    const cellWidth = 75;
-    const cellHeight = 20;
+    const cellWidth = 65;
+    const cellHeight = 30;
     const borderWidth = 1;
     const fontSize = 9;
 
@@ -220,9 +197,6 @@ const Slide2 = ({ data,pptx,title }) => {
         rect.setAttribute("stroke", "white");
         rect.setAttribute("stroke-width", borderWidth);
         svg.appendChild(rect);
-
-        // Get cell content
-        // const cellContent = tableElement.rows[i].cells[j].textContent;
 
         // Create text element for cell content
         const text = document.createElementNS(
@@ -269,56 +243,45 @@ const Slide2 = ({ data,pptx,title }) => {
         resolve(pngDataUri);
       };
       image.onerror = (error) => {
-        console.log(error);
         reject(error);
       };
       image.src = svgDataUri;
     });
   };
 
-
-
   useEffect(() => {
-    // console.log(chartImageURI);
+
     if(chartImageURI !== ""){
-    console.log("hello");
-    // console.log(chartImageURI);
-    // const pptx = new pptxgen();
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
-    // setChartImageURI(chartRef.current?.chart);
+
     const node = document.createElement("div");
     node.innerHTML = chartImageURI;
-    // console.log(chartImageURI);
-    // console.log(node.innerHTML);
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(chartImageURI, "text/html");
     const svgs = doc.querySelectorAll("svg");
 
     const images = [];
-    console.log(svgs);
+
     svgs.forEach(async (svg, index) => {
       try {
         const svgData = new XMLSerializer().serializeToString(svg);
         const base64Image = btoa(svgData);
-        console.log(svg);
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-        // console.log(imageuri);
 
         await convertSvgToPng(imageuri)
           .then((pngDataUri) => {
-            // console.log(pngDataUri);
-
             slide.addImage({
               data: pngDataUri,
               x: 0.3,
               y: 1,
-              w: 6,
+              w: 7.5,
               h: 4.2,
             });
 
-            slide.addText("Pg 3 Overall Revenues - month on month", {
+            slide.addText("Malad  West - Revenues & Orders", {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -329,52 +292,6 @@ const Slide2 = ({ data,pptx,title }) => {
               bold: true,
             });
 
-            //  pptx.writeFile("output.pptx");
-          })
-
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-
-        //mom table
-        const table1Element = document.getElementById("table1");
-        // console.log(table1Element);
-        const table1svgDataUri = convertTableToSvg(table1Element);
-        await convertSvgToPng(table1svgDataUri)
-          .then((pngDataUri) => {
-            // console.log(pngDataUri);
-            const table1ImageOptions = {
-              data: pngDataUri,
-              x: 6.7,
-              y: 1,
-              w: 3,
-              h: 2,
-            };
-
-            console.log(table1ImageOptions);
-
-            slide.addImage(table1ImageOptions);
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-        console.log("hello");
-        //mom2 table
-        const table2Element = document.getElementById("table2");
-        const table2svgDataUri = convertTableToSvg(table2Element);
-
-        await convertSvgToPng(table2svgDataUri)
-          .then((pngDataUri) => {
-            // console.log(pngDataUri);
-            const table2ImageOptions = {
-              data: pngDataUri,
-              x: 6.7,
-              y: 3.2,
-              w: 3,
-              h: 2,
-            };
-
-            // console.log(table2ImageOptions);
             slide.addText(
               "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
               {
@@ -387,9 +304,68 @@ const Slide2 = ({ data,pptx,title }) => {
                 fontSize: 8,
               }
             );
-            slide.addImage(table2ImageOptions);
+            //  pptx.writeFile("output.pptx");
+          })
+
+          .catch((error) => {});
+
+        //mom table
+        const momtableElement = document.getElementById("Slide26momtable");
+
+        const momsvgDataUri = convertTableToSvg(momtableElement);
+        await convertSvgToPng(momsvgDataUri)
+          .then((pngDataUri) => {
+            const momImageOptions = {
+              data: pngDataUri,
+              x: 8,
+              y: 1.2,
+              w: 1.7,
+              h: 0.7,
+            };
+
+            slide.addImage(momImageOptions);
+            slide.addText("MOM", {
+              y: 0.7,
+              x: 8.5,
+              w: 0.75,
+              h: 0.75,
+              color: "FFFFFF",
+              fontFace: "Calibri",
+              fontSize: 15,
+              bold: true,
+            });
             // pptx.writeFile("output.pptx");
-            console.log("slide2 rendered");
+          })
+          .catch((error) => {
+            console.error("Error converting SVG to PNG:", error);
+          });
+
+        //mom2 table
+        const mom2tableElement = document.getElementById("Slide26mo2mtable");
+        // console.log(mom2tableElement)
+        const mom2svgDataUri = convertTableToSvg(mom2tableElement);
+        // console.log(mom2svgDataUri)
+        await convertSvgToPng(mom2svgDataUri)
+          .then((pngDataUri) => {
+            const momImageOptions = {
+              data: pngDataUri,
+              x: 8,
+              y: 2.75,
+              w: 1.7,
+              h: 0.7,
+            };
+            slide.addText("MO2M", {
+              y: 2.25,
+              x: 8.5,
+              w: 1,
+              h: 0.75,
+              color: "FFFFFF",
+              fontFace: "Calibri",
+              fontSize: 15,
+              bold: true,
+            });
+            slide.addImage(momImageOptions);
+            console.log("slide1 rendered")
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -398,53 +374,36 @@ const Slide2 = ({ data,pptx,title }) => {
         console.error("Error converting SVG to image:", error);
       }
     });
+    console.log("HHHHHHH")
   }
   }, [chartImageURI]);
 
-  const generateppt = async () => {
-    console.log("hello");
-    setChartImageURI(chartRef.current?.chart);
-  };
 
   return (
-    <div>
-      <h2>{title}</h2>
+    <><h1>{title}</h1>
       <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
           data={graphData}
           options={options}
-          // graph_id="ScatterChart2"
+          graph_id="ScatterChartSlide26"
           width="70%"
           height={"400px"}
           legend_toggle={true}
           chartPackage={["controls"]}
-          // getChartWrapper={(rcatChart) => {
-          //   setTimeout(() => {
-          //     setChartImageURI(rcatChart.visualization.container.innerHTML);
-          //   }, 5000); // Wait for 5000 milliseconds (5 seconds)
-          // }}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
               setChartImageURI(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
           // ref={chartRef}
-          onload={() => console.log("char hello")}
         />
       </div>
-
-      <Table1 id="table1" data={table1} />
-      <Table2 id="table2" data={table2} />
-      <div>
-        {/* <h2>Chart as png</h2> */}
-        <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
-      </div>
-      {/* <div>
-        <button onClick={generateppt}>Generate PPT</button>
-      </div> */}
-    </div>
+      {/* <DataTable id="table" data={table} /> */}
+      <MomTable id="Slide26momtable" data={mom} />
+      <Mo2mTable id="Slide26mom2table" data={mom2} />
+    </>
   );
 };
 
-export default Slide2;
+export default Slide26;

@@ -126,72 +126,101 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
-  const countRef = useRef(0);
+const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
 
-  const [options, setOptions] = useState({});
-  const [chartEvents, setChartEvents] = useState([]);
-  const [chartImageURI1, setChartImageURI1] = useState("");
+
+  // const [options, setOptions] = useState({});
   const [chartImageURI2, setChartImageURI2] = useState("");
-  const chartRef = useRef(null);
-  const checkRef = useRef(false);
+
+  console.log('7 StoreWiseOrderIDWiseRatingSplit')
 //   const graphData = data.graph.graphdata;
-  const graphData = [
-    [
-      "City",
-      "Category 1",
-      { role: "annotation" },
-      "Category 2",
-      { role: "annotation" },
-      "Category 3",
-      { role: "annotation" },
-    ],
-    [
-      "New York City, NY",
-      { v: 4000000, f: "4M" },
-      "4M",
-      { v: 3000000, f: "3M" },
-      "3M",
-      { v: 1000000, f: "1M" },
-      "1M",
-    ],
-    [
-      "Los Angeles, CA",
-      { v: 2000000, f: "2M" },
-      "2M",
-      { v: 1500000, f: "1.5M" },
-      "1.5M",
-      { v: 800000, f: "800K" },
-      "800K",
-    ],
-    [
-      "Chicago, IL",
-      { v: 1500000, f: "1.5M" },
-      "1.5M",
-      { v: 1000000, f: "1M" },
-      "1M",
-      { v: 600000, f: "600K" },
-      "600K",
-    ],
-    [
-      "Houston, TX",
-      { v: 1200000, f: "1.2M" },
-      "1.2M",
-      { v: 800000, f: "800K" },
-      "800K",
-      { v: 400000, f: "400K" },
-      "400K",
-    ],
-    [
-      "Philadelphia, PA",
-      { v: 1000000, f: "1M" },
-      "1M",
-      { v: 700000, f: "700K" },
-      "700K",
-      { v: 300000, f: "300K" },
-      "300K",
-    ],
-  ];
+  // const graphData = [
+  //   [
+  //     "City",
+  //     "Good",
+  //     { role: "annotation" },
+  //     "Neutral",
+  //     { role: "annotation" },
+  //     "Bad",
+  //     { role: "annotation" },
+  //   ],
+  //   [
+  //     "New York City, NY",
+  //     { v: 4000000, f: "4M" },
+  //     "4M",
+  //     { v: 3000000, f: "3M" },
+  //     "3M",
+  //     { v: 1000000, f: "1M" },
+  //     "1M",
+  //   ],
+  //   [
+  //     "Los Angeles, CA",
+  //     { v: 2000000, f: "2M" },
+  //     "2M",
+  //     { v: 1500000, f: "1.5M" },
+  //     "1.5M",
+  //     { v: 800000, f: "800K" },
+  //     "800K",
+  //   ],
+  //   [
+  //     "Chicago, IL",
+  //     { v: 1500000, f: "1.5M" },
+  //     "1.5M",
+  //     { v: 1000000, f: "1M" },
+  //     "1M",
+  //     { v: 600000, f: "600K" },
+  //     "600K",
+  //   ],
+  //   [
+  //     "Houston, TX",
+  //     { v: 1200000, f: "1.2M" },
+  //     "1.2M",
+  //     { v: 800000, f: "800K" },
+  //     "800K",
+  //     { v: 400000, f: "400K" },
+  //     "400K",
+  //   ],
+  //   [
+  //     "Philadelphia, PA",
+  //     { v: 1000000, f: "1M" },
+  //     "1M",
+  //     { v: 700000, f: "700K" },
+  //     "700K",
+  //     { v: 300000, f: "300K" },
+  //     "300K",
+  //   ],
+  // ];
+
+  const graphData = data.graph
+
+
+  const options = {
+    title: "",
+    hAxis: {
+      title: "",
+      gridlines: { color: "transparent" },
+    },
+    vAxis: {
+      title: "",
+      gridlines: { color: "transparent" },
+    },
+    legend: "top", // Hide legends
+    isStacked: true,
+    annotations: {
+      textStyle: {
+        fontSize: 12, // Adjust the font size of annotations
+      },
+    },
+    // chartArea: {
+    //   left: 70,
+    //   top: 70,
+    //   bottom: 30,
+    //   right: 70,
+    //   width: "100%",
+    //   height: "70%",
+    // },
+    colors: ["rgb(119, 217, 112)", "rgb(255, 152, 0)", "rgb(250, 112, 112)"], // Specify the colors for each category
+  };
   
 //   const table = data.table;
 
@@ -279,51 +308,9 @@ const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
   };
 
   useEffect(() => {
-    const options = {
-        title: "Population of Largest U.S. Cities",
-        hAxis: {
-          title: "",
-          gridlines: { color: "transparent" },
-        },
-        vAxis: {
-          title: "",
-          gridlines: { color: "transparent" },
-        },
-        legend: "none", // Hide legends
-        isStacked: true,
-        annotations: {
-          textStyle: {
-            fontSize: 7, // Adjust the font size of annotations
-          },
-        },
-        chartArea: {
-          left: 70,
-          top: 70,
-          bottom: 30,
-          right: 70,
-          width: "100%",
-          height: "70%",
-        },
-        colors: ["rgb(119, 217, 112)", "rgb(255, 152, 0)", "rgb(250, 112, 112)"], // Specify the colors for each category
-      };
+ 
 
-    // const chart_events = [
-    //   {
-    //     eventName: "ready",
-    //     callback: (rcatChart) => {
-    //       if (!checkRef.current) {
-    //         // Check the ref value
-    //         const chartContainerHTML =
-    //           rcatChart.chartWrapper.getChart().container.innerHTML;
-    //         checkRef.current = true; // Update the ref value
-
-    //         setChartImageURI(chartContainerHTML); // Update chartImageURI only if it has changed
-    //       }
-    //     },
-    //   },
-    // ];
-
-    setOptions(options);
+    // setOptions(options);
 
     // setChartEvents(chart_events);
   }, []);
@@ -350,93 +337,12 @@ const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
     });
   };
 
-  useEffect(() => {
-    const slide = pptx.addSlide();
-    slide.background = { fill: "000000" };
-
-    const node = document.createElement("div");
-    node.innerHTML = chartImageURI1;
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(chartImageURI1, "text/html");
-    const svgs = doc.querySelectorAll("svg");
-
-    const images = [];
-
-    svgs.forEach(async (svg, index) => {
-      try {
-       
-        const svgData = new XMLSerializer().serializeToString(svg);
-        console.log("hello")
-        console.log(svgData)
-        const utf8Data = unescape(encodeURIComponent(svgData));
-        const base64Image = btoa(utf8Data);
-        
-        const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-        console.log(imageuri)
-        await convertSvgToPng(imageuri)
-          .then((pngDataUri) => {
-            slide.addImage({
-              data: pngDataUri,
-              x: 0.6,
-              y: 1,
-              w: 6,
-              h: 2,
-            });
-
-            slide.addText("Overall Revenues - month on month", {
-              y: -0.5,
-              x: 0.6,
-              w: 10,
-              h: 2,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 30,
-              bold: true,
-            });
-
-            slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
-                y: 4.5,
-                x: 2.2,
-                w: 10,
-                h: 2,
-                color: "FFFFFF",
-                fontFace: "Calibri",
-                fontSize: 8,
-              }
-            );
-            //  pptx.writeFile("output.pptx");
-          })
-
-          .catch((error) => {});
-
-
-
-      } catch (error) {
-        console.error("Error converting SVG to image:", error);
-      }
-    });
-  }, [chartImageURI1]);
-
-  const callme = () => (rcatChart) => {
-    console.log(rcatChart);
-  };
-
-  const [sankey, setSankey] = useState(null);
-
-  var newchartEvents = [
-    {
-      eventName: "ready",
-      callback: ({ chartWrapper }) => {
-        setSankey(chartWrapper);
-      },
-    },
-  ];
 
 
   useEffect(() => {
+   
+
+    if(chartImageURI2 != ""){
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
 
@@ -447,30 +353,38 @@ const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
     const doc = parser.parseFromString(chartImageURI2, "text/html");
     const svgs = doc.querySelectorAll("svg");
 
+    // const doc2 = parser.parseFromString(chartImageURI1, "text/html");
+    // const svgs2 = doc2.querySelectorAll("svg");
+    // const svg2  =svgs2[0]
+
     const images = [];
 
     svgs.forEach(async (svg, index) => {
       try {
        
         const svgData = new XMLSerializer().serializeToString(svg);
-        console.log("hello")
-        console.log(svgData)
+        // const svgData2 = new XMLSerializer().serializeToString(svg2);
+        // console.log("hello")
+        // console.log(svgData)
         const utf8Data = unescape(encodeURIComponent(svgData));
+        // const utf8Data2 = unescape(encodeURIComponent(svgData2));
         const base64Image = btoa(utf8Data);
+        // const base64Image2 = btoa(utf8Data2);
         
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
+        // const imageuri2 = `data:image/svg+xml;base64,${base64Image2}`;
         console.log(imageuri)
         await convertSvgToPng(imageuri)
           .then((pngDataUri) => {
             slide.addImage({
               data: pngDataUri,
-              x: 0.6,
-              y: 3,
-              w: 6,
-              h: 2,
+              x: 0.25,
+              y: 1,
+              w: 9.5,
+              h: 4,
             });
 
-            slide.addText("Overall Revenues - month on month", {
+            slide.addText("Store Wise -Order Wise Rating Split", {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -498,29 +412,31 @@ const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
 
           .catch((error) => {});
 
+          // await convertSvgToPng(imageuri2).then((pngDataUri) => {
+          //   slide.addImage({
+          //     data: pngDataUri,
+          //     x: 0.6,
+          //     y: 3,
+          //     w: 6,
+          //     h: 2,
+          //   });})
+
+          //   .catch((error) => {});
+
 
 
       } catch (error) {
         console.error("Error converting SVG to image:", error);
       }
     });
+  }
   }, [chartImageURI2]);
 
-  useEffect(() => {
-    // side effect within useEffect is bad this doesn't get cleaned up on comonent unmount, just for demo purposes
-    console.log(" I AM CALLED");
-    if (sankey != null) {
-      sankey.getChart().setSelection(null); // setting selection to null works this needs the actual google chart format and not the wrapper format
-      console.log(sankey.getChart().getSelection());
-      sankey.draw();
-    }
-    // reset selection after x seconds
-  }, [sankey]);
 
   return (
-    <>
+    <><h1>{title}</h1>
       <div id="googlegraphs">
-      <Chart
+      {/* <Chart
           chartType="BarChart"
           data={graphData}
           options={options}
@@ -533,13 +449,13 @@ const StoreWiseOrderIDWiseRatingSplit = ({ pptx}) => {
               setChartImageURI1(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
-        />
+        /> */}
           <Chart
           chartType="BarChart"
           data={graphData}
           options={{...options ,isStacked: "percent"}}
           graph_id="verticalstackBarChart2"
-          height={"400px"}
+          height={"700px"}
           legend_toggle={true}
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {

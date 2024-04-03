@@ -37,22 +37,25 @@ const Table = ({ data }) => {
   );
 };
 
-const Slide4StoreWiseKTP = ({ pptx }) => {
-  const data = [
-    [
-      "Location",
-      "Sep-2023",
-      "Oct-2023",
-      "Nov-2023",
-      "Dec-2023",
-      "Jan-2024",
-      "Feb-2024",
-    ],
-    ["Jogeshwari", 17, 18, 0, 0, 0, 0],
-    ["Vashi", 14, 15, 0, 0, 0, 0],
-    ["Mohammad Ali Road", 15, 14, 0, 0, 0, 0],
-    ["Marol", 15, 17, 0, 0, 0, 0],
-  ];
+const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
+  // const data = [
+  //   [
+  //     "Location",
+  //     "Sep-2023",
+  //     "Oct-2023",
+  //     "Nov-2023",
+  //     "Dec-2023",
+  //     "Jan-2024",
+  //     "Feb-2024",
+  //   ],
+  //   ["Jogeshwari", 17, 18, 0, 0, 0, 0],
+  //   ["Vashi", 14, 15, 0, 0, 0, 0],
+  //   ["Mohammad Ali Road", 15, 14, 0, 0, 0, 0],
+  //   ["Marol", 15, 17, 0, 0, 0, 0],
+  // ];
+
+  const tableData= data.table
+  console.log('4 slide4storewisekpt')
 
   const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
@@ -77,8 +80,8 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
     });
   };
   const convertTableToSvg = (tableElement) => {
-    const cellWidth = 70;
-    const cellHeight = 17;
+    let cellWidth = 70;
+    const cellHeight = 20;
     const borderWidth = 1;
     const fontSize = 9;
 
@@ -87,7 +90,7 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
     const numCols = tableElement.rows[0].cells.length;
 
     // Calculate SVG dimensions
-    const svgWidth = cellWidth * numCols;
+    const svgWidth = 75 * numCols;
     // const svgHeight = cellHeight * numRows;
     const svgHeight = cellHeight * 11;
 
@@ -106,11 +109,19 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
           "rect"
         );
         
-        rect.setAttribute("x", j * cellWidth);
+        if(j== 0){
+          cellWidth = 100
+          rect.setAttribute("x", j * cellWidth);
+        }
+        else{
+
+          cellWidth = 70
+          rect.setAttribute("x", ((j-1) * cellWidth)+100);
+        } 
         rect.setAttribute("y", i * cellHeight);
         // rect.setAttribute("width", cellWidth);
         if(j==0){
-          rect.setAttribute("width", (cellWidth+20));
+          rect.setAttribute("width", (cellWidth));
         }
         else{
           rect.setAttribute("width", cellWidth);
@@ -119,13 +130,13 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
         // Check cell content for Zomato or Swiggy and set background color accordingly
         let cellContent = "NA";
         let color = "black"  
-        console.log(numRows)
+        // console.log(numRows)
         if(i<numRows){
           cellContent = tableElement.rows[i].cells[j].textContent;
           color = "white"
         }
-        console.log("cellContent:  "+cellContent)
-        console.log("row:  "+i)
+        // console.log("cellContent:  "+cellContent)
+        // console.log("row:  "+i)
         if (i==0) {
           rect.setAttribute("fill", "red");
         } 
@@ -140,19 +151,19 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
         );
 
         if(j==0){
-          text.setAttribute("x", j * (cellWidth+20) + (cellWidth+20) / 2);
+          text.setAttribute("x", j * cellWidth + cellWidth/ 2);
         }
         else{
-          text.setAttribute("x", j * cellWidth + cellWidth / 2);
+          text.setAttribute("x", ((j-1) * cellWidth+100) + cellWidth / 2);
         }
-                text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
+        text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
         text.setAttribute("fill", color);
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
         text.textContent = cellContent;
-        console.log(i+" "+j)
-        console.log(text.textContent)
+        // console.log(i+" "+j)
+        // console.log(text.textContent)
         svg.appendChild(text);
       }
     }
@@ -194,7 +205,7 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
             h: 4,
           });
 
-          slide.addText("Store Wise Grid Visibility", {
+          slide.addText("Store Wise KPT", {
             y: -0.5,
             x: 0.6,
             w: 10,
@@ -227,7 +238,7 @@ const Slide4StoreWiseKTP = ({ pptx }) => {
     // });
   }, []);
 
-  return <Table data={data} />;
+  return<><h1>{title}</h1> <Table data={tableData} /> </>;
 };
 
 export default Slide4StoreWiseKTP;

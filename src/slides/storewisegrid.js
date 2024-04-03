@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-const Table = ({ data }) => {
+const Table = ({ data, id }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
   const fontSize = 12;
 
   return (
+    <>
     <table
       style={{
         borderCollapse: "collapse",
@@ -13,7 +14,7 @@ const Table = ({ data }) => {
         color: "white",
         width: "80%",
       }}
-      id="slide3table1"
+      id={"storewisetable" + id}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -34,17 +35,36 @@ const Table = ({ data }) => {
         ))}
       </tbody>
     </table>
+    </>
   );
 };
 
-const StoreWiseGridVisibility = ({ pptx }) => {
+const StoreWiseGridVisibility = ({ pptx,title }) => {
+  console.log('3 Storewisegridvisibility')
   const data = [
-    ["Location", "Zomato", "Swiggy"],
-    ["Jogeshwari", 0, 0],
-    ["Vashi", 0, 0],
-    ["Mohammad Ali Road", 0, 0],
-    ["Marol", 0, 0],
+    [
+      ["Location", "Zomato", "Swiggy"],
+      ["Jogeshwari", 0, 0],
+      ["Vashi", 0, 0],
+      ["Mohammad Ali Road", 0, 0],
+      ["Marol", 0, 0],
+      ["Jogeshwari", 0, 0],
+      ["Vashi", 0, 0],
+      ["Mohammad Ali Road", 0, 0],
+      ["Marol", 0, 0],
+      ["Marol", 0, 0],
+       ["Jogeshwari", 0, 0],
+       ["Jogeshwari", 0, 0],
+    ],
+    [
+    
+      ["Jogeshwari", 0, 0],
+      ["Vashi", 0, 0],
+      ["Mohammad Ali Road", 0, 0],
+      ["Marol", 0, 0],
+    ],
   ];
+  console.log('8 StoreWiseGridVisibility')
 
   const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
@@ -97,20 +117,18 @@ const StoreWiseGridVisibility = ({ pptx }) => {
           "http://www.w3.org/2000/svg",
           "rect"
         );
-        if(j== 0){
-          cellWidth = 120
+        if (j == 0) {
+          cellWidth = 120;
           rect.setAttribute("x", j * cellWidth);
+        } else {
+          cellWidth = 80;
+          rect.setAttribute("x", (j - 1) * cellWidth + 120);
         }
-        else{
-
-          cellWidth = 100
-          rect.setAttribute("x", ((j-1) * cellWidth)+120);
-        } 
         // rect.setAttribute("x", j * cellWidth);
         rect.setAttribute("y", i * cellHeight);
         // rect.setAttribute("width", cellWidth);
         if (j == 0) {
-          rect.setAttribute("width", cellWidth );
+          rect.setAttribute("width", cellWidth);
         } else {
           rect.setAttribute("width", cellWidth);
         }
@@ -123,8 +141,6 @@ const StoreWiseGridVisibility = ({ pptx }) => {
           cellContent = tableElement.rows[i].cells[j].textContent;
           color = "white";
         }
-        console.log("cellContent:  " + cellContent);
-        console.log("row:  " + i);
         if (cellContent.includes("Zomato")) {
           rect.setAttribute("fill", "red");
         } else if (cellContent.includes("Swiggy")) {
@@ -143,19 +159,19 @@ const StoreWiseGridVisibility = ({ pptx }) => {
         );
 
         if (j == 0) {
-          text.setAttribute("x", j * cellWidth + cellWidth/ 2);
-        } else {
           text.setAttribute("x", j * cellWidth + cellWidth / 2);
+        } else {
+          text.setAttribute("x", (j - 1) * cellWidth + 120 + cellWidth / 2);
         }
-        text.setAttribute("x", j * cellWidth + cellWidth / 2);
+        // text.setAttribute("x", j * cellWidth + cellWidth / 2);
         text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
         text.setAttribute("fill", color);
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
         text.textContent = cellContent;
-        console.log(i + " " + j);
-        console.log(text.textContent);
+        // console.log(i + " " + j);
+        // console.log(text.textContent);
         svg.appendChild(text);
       }
     }
@@ -175,62 +191,71 @@ const StoreWiseGridVisibility = ({ pptx }) => {
   useEffect(() => {
     // const node = document.createElement("div");
     // node.innerHTML = chartImageURI;
+    for (let i = 0; i < data.length; i++) {
+      const parser = new DOMParser();
 
-    const parser = new DOMParser();
+      try {
+        const slide = pptx.addSlide();
+        slide.background = { fill: "000000" };
+        //main table
+        const tableElement = document.getElementById("storewisetable"+(i));
+        const svgDataUri = convertTableToSvg(tableElement);
+        const numRows = tableElement.rows.length;
+        const NoOfPages = numRows / 6;
 
-    try {
-      const slide = pptx.addSlide();
-      slide.background = { fill: "000000" };
-      //main table
-      const tableElement = document.getElementById("slide3table1");
-      const svgDataUri = convertTableToSvg(tableElement);
-      const numRows = tableElement.rows.length;
-      const NoOfPages = numRows / 6;
+        convertSvgToPng(svgDataUri)
+          .then((pngDataUri) => {
+            slide.addImage({
+              data: pngDataUri,
+              x: 1,
+              y: 1,
+              w: 5.5,
+              h: 4,
+            });
 
-      convertSvgToPng(svgDataUri)
-        .then((pngDataUri) => {
-          slide.addImage({
-            data: pngDataUri,
-            x: 1,
-            y: 1,
-            w: 5.5,
-            h: 4,
-          });
-
-          slide.addText("Store Wise Grid Visibility", {
-            y: -0.5,
-            x: 0.6,
-            w: 10,
-            h: 2,
-            color: "FFFFFF",
-            fontFace: "Calibri",
-            fontSize: 30,
-            bold: true,
-          });
-
-          slide.addText(
-            "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-            {
-              y: 4.5,
-              x: 2.2,
+            slide.addText("Store Wise Grid Visibility", {
+              y: -0.5,
+              x: 0.6,
               w: 10,
               h: 2,
               color: "FFFFFF",
               fontFace: "Calibri",
-              fontSize: 8,
-            }
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.error("Error converting SVG to image:", error);
+              fontSize: 30,
+              bold: true,
+            });
+
+            slide.addText(
+              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+              {
+                y: 4.5,
+                x: 2.2,
+                w: 10,
+                h: 2,
+                color: "FFFFFF",
+                fontFace: "Calibri",
+                fontSize: 8,
+              }
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.error("Error converting SVG to image:", error);
+      }
     }
     // });
   }, []);
 
-  return <Table data={data} />;
+  return (
+    <>
+    <h1>{title}</h1>
+      {data.map((dat, index) => (
+        <Table data={dat} id={index} />
+      ))}
+      <h1>end</h1>
+    </>
+  );
 };
 
 export default StoreWiseGridVisibility;
