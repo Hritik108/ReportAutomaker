@@ -419,17 +419,11 @@ const Slide2 = ({ data,pptx,title }) => {
           height={"400px"}
           legend_toggle={true}
           chartPackage={["controls"]}
-          // getChartWrapper={(rcatChart) => {
-          //   setTimeout(() => {
-          //     setChartImageURI(rcatChart.visualization.container.innerHTML);
-          //   }, 5000); // Wait for 5000 milliseconds (5 seconds)
-          // }}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
               setChartImageURI(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
-          // ref={chartRef}
           onload={() => console.log("char hello")}
         />
       </div>
@@ -437,12 +431,8 @@ const Slide2 = ({ data,pptx,title }) => {
       <Table1 id="table1" data={table1} />
       <Table2 id="table2" data={table2} />
       <div>
-        {/* <h2>Chart as png</h2> */}
         <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
       </div>
-      {/* <div>
-        <button onClick={generateppt}>Generate PPT</button>
-      </div> */}
     </div>
   );
 };

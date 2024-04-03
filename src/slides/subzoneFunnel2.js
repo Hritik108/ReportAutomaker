@@ -5,11 +5,11 @@ import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
 
-const SlideX = ({ pptx, data,title }) => {
+const SlideX = ({ pptx, data, title }) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
-  const graphData1 = data.graph1
-  const graphData2 = data.graph2
+  const graphData1 = data.graph1;
+  const graphData2 = data.graph2;
 
   const options = {
     title: {
@@ -79,7 +79,6 @@ const SlideX = ({ pptx, data,title }) => {
 
   useEffect(() => {
     if (chartImageURI1 != "" && chartImageURI2 != "") {
-     
       const slide = pptx.addSlide();
       slide.background = { fill: "000000" };
 
@@ -92,22 +91,26 @@ const SlideX = ({ pptx, data,title }) => {
 
       const doc2 = parser.parseFromString(chartImageURI2, "text/html");
       const svgs2 = doc2.querySelectorAll("svg");
-      const svg2  = svgs2[0]
+      const svg2 = svgs2[0];
 
-      
-      console.log("hell01")
-      console.log(svgs)
+      // console.log("hell01");
+      console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
-          console.log("hellll")
+          console.log("hellll");
           const svgData = new XMLSerializer().serializeToString(svg);
           const svgData2 = new XMLSerializer().serializeToString(svg2);
-          const base64Image = btoa(svgData);
-          const base64Image2 = btoa(svgData2);
+          // const base64Image = btoa(svgData);
+          // const base64Image2 = btoa(svgData2);
+          // console.log(base64Image)
+          // console.log(base64Image2)
+          const utf8Data = unescape(encodeURIComponent(svgData));
+          const base64Image = btoa(utf8Data);
+          const utf8Data2 = unescape(encodeURIComponent(svgData2));
+          const base64Image2 = btoa(utf8Data2);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
           const imageuri2 = `data:image/svg+xml;base64,${base64Image2}`;
-          
 
           await convertSvgToPng(imageuri)
             .then((pngDataUri) => {
@@ -144,9 +147,12 @@ const SlideX = ({ pptx, data,title }) => {
               );
               //  pptx.writeFile("output.pptx");
             })
-            .catch((error) => {console.log(error)});
+            .catch((error) => {
+              console.log(error);
+            });
 
-            await convertSvgToPng(imageuri2).then((pngDataUri) => {
+          await convertSvgToPng(imageuri2)
+            .then((pngDataUri) => {
               slide.addImage({
                 data: pngDataUri,
                 x: 5.1,
@@ -154,55 +160,51 @@ const SlideX = ({ pptx, data,title }) => {
                 w: 4.7,
                 h: 3,
               });
-            console.log("hellllllloooo")
+              console.log("hellllllloooo");
             })
-            .catch((error) => { console.log(error)});
-  
-
+            .catch((error) => {
+              console.log(error);
+            });
         } catch (error) {
           console.error("Error converting SVG to image:", error);
         }
       });
     }
   }, [chartImageURI1, chartImageURI2]);
-  console.log("hello")
 
   return (
-    <><h1>{title}</h1>
-      <div id="googlegraphs1">
-        <Chart
-          chartType="ScatterChart"
-          data={graphData1}
-          options={options}
-          width="70%"
-          height={"400px"}
-          legend_toggle={true}
-          chartPackage={["controls"]}
-          getChartWrapper={(rcatChart) => {
-            setTimeout(() => {
-              setChartImageURI1(rcatChart.visualization.container.innerHTML);
-            }, 5000); // Wait for 5000 milliseconds (5 seconds)
-          }}
-          // ref={chartRef}
-        />
-      </div>
-      <div id="googlegraphs2">
-        <Chart
-          chartType="ScatterChart"
-          data={graphData2}
-          options={options}
-          width="70%"
-          height={"400px"}
-          legend_toggle={true}
-          chartPackage={["controls"]}
-          getChartWrapper={(rcatChart) => {
-            setTimeout(() => {
-              setChartImageURI2(rcatChart.visualization.container.innerHTML);
-            }, 5000); // Wait for 5000 milliseconds (5 seconds)
-          }}
-          // ref={chartRef}
-        />
-      </div>
+    <>
+      <h1>{title}</h1>
+
+      <Chart
+        chartType="ScatterChart"
+        data={graphData1}
+        options={options}
+        width="70%"
+        height={"400px"}
+        legend_toggle={true}
+        chartPackage={["controls"]}
+        getChartWrapper={(rcatChart) => {
+          setTimeout(() => {
+            setChartImageURI1(rcatChart.visualization.container.innerHTML);
+          }, 5000); // Wait for 5000 milliseconds (5 seconds)
+        }}
+      />
+
+      <Chart
+        chartType="ScatterChart"
+        data={graphData2}
+        options={options}
+        width="70%"
+        height={"400px"}
+        legend_toggle={true}
+        chartPackage={["controls"]}
+        getChartWrapper={(rcatChart) => {
+          setTimeout(() => {
+            setChartImageURI2(rcatChart.visualization.container.innerHTML);
+          }, 5000); // Wait for 5000 milliseconds (5 seconds)
+        }}
+      />
     </>
   );
 };

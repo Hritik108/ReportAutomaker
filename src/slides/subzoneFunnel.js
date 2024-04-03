@@ -303,7 +303,9 @@ const Slide27 = ({ pptx, data,title }) => {
     svgs.forEach(async (svg, index) => {
       try {
         const svgData = new XMLSerializer().serializeToString(svg);
-        const base64Image = btoa(svgData);
+        // const base64Image = btoa(svgData);
+        const utf8Data = unescape(encodeURIComponent(svgData));
+        const base64Image = btoa(utf8Data);
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
 
