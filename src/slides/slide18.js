@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
 
-const Table1 = ({ data,tableid }) => {
+const Table1 = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -16,7 +16,7 @@ const Table1 = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"table1"}
+      id={tableid + "table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -39,7 +39,7 @@ const Table1 = ({ data,tableid }) => {
   );
 };
 
-const Table2 = ({ data,tableid }) => {
+const Table2 = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -53,7 +53,7 @@ const Table2 = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"table2"}
+      id={tableid + "table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -76,10 +76,10 @@ const Table2 = ({ data,tableid }) => {
   );
 };
 
-const Slide18 = ({ tableid,pptx, data, title }) => {
+const Slide18 = ({ tableid, pptx, data, title }) => {
   const [chartImageURI, setChartImageURI] = useState("");
-  const table1 = data.table1
-  const table2 = data.table2
+  const table1 = data.table1;
+  const table2 = data.table2;
   const graphData = data.graph;
 
   const options = {
@@ -95,8 +95,8 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
     //   4: { tooltip: false },
     //   5: { tooltip: false },
     // },
-    'tooltip' : {
-      trigger: 'none'
+    tooltip: {
+      trigger: "none",
     },
     legend: { position: "top", maxLines: 5 }, // Move legend to the top
     annotations: {
@@ -106,11 +106,10 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
       },
     },
     chartArea: {
-      left: 70,
-      top: 70,
       bottom: 30,
-      right: 70,
-      width: "90%",
+      right: 30,
+      left: 30,
+      top: 60,
       // height: "90%",
     },
   };
@@ -315,7 +314,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
             });
 
           //mom table
-          const table1Element = document.getElementById(tableid+"table1");
+          const table1Element = document.getElementById(tableid + "table1");
           // console.log(table1Element);
           const table1svgDataUri = convertTableToSvg(table1Element, 15);
           await convertSvgToPng(table1svgDataUri)
@@ -338,7 +337,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
             });
           // console.log("hello");
           //mom2 table
-          const table2Element = document.getElementById(tableid+"table2");
+          const table2Element = document.getElementById(tableid + "table2");
           const table2svgDataUri = convertTableToSvg(table2Element, 12);
 
           await convertSvgToPng(table2svgDataUri)
@@ -379,27 +378,25 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
     }
   }, [chartImageURI]);
 
-
-
   return (
     <div>
       <h2>{data.title}</h2>
       {/* <div id="googlegraphs18"> */}
-        <Chart
-          chartType="ComboChart"
-          data={graphData}
-          options={options}
-          graph_id="ScatterChart18"
-          width="70%"
-          height={"400px"}
-          legend_toggle={true}
-          chartPackage={["controls"]}
-          getChartWrapper={(rcatChart) => {
-            setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
-            }, 5000); // Wait for 5000 milliseconds (5 seconds)
-          }}
-        />
+      <Chart
+        chartType="ComboChart"
+        data={graphData}
+        options={options}
+        graph_id="ScatterChart18"
+        width="90%"
+        height={"600px"}
+        legend_toggle={true}
+        chartPackage={["controls"]}
+        getChartWrapper={(rcatChart) => {
+          setTimeout(() => {
+            setChartImageURI(rcatChart.visualization.container.innerHTML);
+          }, 5000); // Wait for 5000 milliseconds (5 seconds)
+        }}
+      />
       {/* </div> */}
 
       <Table1 tableid={tableid} data={table1} />
