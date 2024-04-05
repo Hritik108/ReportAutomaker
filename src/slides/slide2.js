@@ -156,7 +156,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
   const table1 = data.table1;
   const table2 = data.table2;
   const graphData = data.graph;
-  console.log("2 Slide2");
+  // console.log("2 Slide2");
   const options = {
     title: "",
     seriesType: "bars",
@@ -295,7 +295,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
   useEffect(() => {
     // console.log(chartImageURI);
     if (chartImageURI !== "") {
-      console.log("hello");
+      // console.log("hello");
       // console.log(chartImageURI);
       // const pptx = new pptxgen();
       const slide = pptx.addSlide();
@@ -310,7 +310,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
       const svgs = doc.querySelectorAll("svg");
 
       const images = [];
-      console.log(svgs);
+      // console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
           const svgData = new XMLSerializer().serializeToString(svg);
@@ -365,14 +365,14 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
                 h: 2,
               };
 
-              console.log(table1ImageOptions);
+              // console.log(table1ImageOptions);
 
               slide.addImage(table1ImageOptions);
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);
             });
-          console.log("hello");
+          // console.log("hello");
           //mom2 table
           const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element);
@@ -403,7 +403,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
               );
               slide.addImage(table2ImageOptions);
               // pptx.writeFile("output.pptx");
-              console.log("slide2 rendered");
+              // console.log("slide2 rendered");
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);

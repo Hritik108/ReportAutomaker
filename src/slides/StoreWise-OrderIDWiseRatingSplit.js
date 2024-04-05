@@ -132,7 +132,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
  
   const [chartImageURI2, setChartImageURI2] = useState("");
 
-  console.log('7 StoreWiseOrderIDWiseRatingSplit')
+  // console.log('7 StoreWiseOrderIDWiseRatingSplit')
 
   const graphData = data.graph
 
@@ -377,8 +377,8 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
     });
   }
   }, [chartImageURI2]);
-  console.log(graphData)
-console.log(graphData.length)
+//   console.log(graphData)
+// console.log(graphData.length)
   return (
     <><h1>{data.title}</h1>
       {/* <div id="googlegraphs"> */}

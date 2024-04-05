@@ -404,7 +404,7 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
               bold: true,
             });
             slide.addImage(momImageOptions);
-            console.log("slide1 rendered")
+            // console.log("slide1 rendered")
           })
           .catch((error) => {
             console.error("Error converting SVG to PNG:", error);
@@ -413,7 +413,7 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
         console.error("Error converting SVG to image:", error);
       }
     });
-    console.log("HHHHHHH")
+    // console.log("HHHHHHH")
   }
   }, [chartImageURI]);
 

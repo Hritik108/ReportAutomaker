@@ -320,7 +320,7 @@ const Slide27 = ({ pptx,tableid, data}) => {
         console.error("Error converting SVG to image:", error);
       }
     });
-    console.log("HHHHHHH")
+    // console.log("HHHHHHH")
   }
   }, [chartImageURI]);
 

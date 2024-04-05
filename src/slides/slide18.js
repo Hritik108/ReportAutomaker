@@ -274,7 +274,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
       const svgs = doc.querySelectorAll("svg");
 
       const images = [];
-      console.log(svgs);
+      // console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
           const svgData = new XMLSerializer().serializeToString(svg);
@@ -329,14 +329,14 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
                 h: 0.75,
               };
 
-              console.log(table1ImageOptions);
+              // console.log(table1ImageOptions);
 
               slide.addImage(table1ImageOptions);
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);
             });
-          console.log("hello");
+          // console.log("hello");
           //mom2 table
           const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element, 12);

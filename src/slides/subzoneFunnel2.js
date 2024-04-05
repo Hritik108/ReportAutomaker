@@ -97,10 +97,10 @@ const SlideX = ({ pptx, data}) => {
       const svg2 = svgs2[0];
 
       // console.log("hell01");
-      console.log(svgs);
+      // console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
-          console.log("hellll");
+          // console.log("hellll");
           const svgData = new XMLSerializer().serializeToString(svg);
           const svgData2 = new XMLSerializer().serializeToString(svg2);
           // const base64Image = btoa(svgData);
@@ -163,7 +163,7 @@ const SlideX = ({ pptx, data}) => {
                 w: 4.7,
                 h: 3,
               });
-              console.log("hellllllloooo");
+              // console.log("hellllllloooo");
             })
             .catch((error) => {
               console.log(error);

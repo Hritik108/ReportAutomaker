@@ -429,7 +429,7 @@ const table2 = data.table2
 
           //mom table
           const table1Element = document.getElementById(tableid+"table1");
-          console.log(table1Element);
+          // console.log(table1Element);
           const table1svgDataUri = convertTableToSvg(table1Element, 10);
           await convertSvgToPng(table1svgDataUri)
             .then((pngDataUri) => {
@@ -442,14 +442,14 @@ const table2 = data.table2
                 h: 0.75,
               };
 
-              console.log(table1ImageOptions);
+              // console.log(table1ImageOptions);
 
               slide.addImage(table1ImageOptions);
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);
             });
-          console.log("hello");
+          // console.log("hello");
           //mom2 table
           const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element, 10);
@@ -480,7 +480,7 @@ const table2 = data.table2
               );
               slide.addImage(table2ImageOptions);
               // pptx.writeFile("output.pptx");
-              console.log("slide2 rendered");
+              // console.log("slide2 rendered");
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);

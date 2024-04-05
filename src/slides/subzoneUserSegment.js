@@ -8,7 +8,7 @@ import { render } from "@testing-library/react";
 const Slide31 = ({ pptx, data }) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
-  console.log('13 Slide31')
+  // console.log('13 Slide31')
 
 
   // const graphData = [
@@ -97,11 +97,11 @@ const Slide31 = ({ pptx, data }) => {
       const svgs2 = doc2.querySelectorAll("svg");
       const svg2 = svgs2[0];
 
-      console.log("hell01");
-      console.log(svgs);
+      // console.log("hell01");
+      // console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
-          console.log("hellll");
+          // console.log("hellll");
           const svgData = new XMLSerializer().serializeToString(svg);
           const svgData2 = new XMLSerializer().serializeToString(svg2);
           const base64Image = btoa(svgData);
@@ -158,7 +158,7 @@ const Slide31 = ({ pptx, data }) => {
                 w: 4.7,
                 h: 3,
               });
-              console.log("hellllllloooo");
+              // console.log("hellllllloooo");
             })
             .catch((error) => {
               console.log(error);
@@ -169,7 +169,7 @@ const Slide31 = ({ pptx, data }) => {
       });
     }
   }, [chartImageURI1, chartImageURI2]);
-  console.log("hello");
+  // console.log("hello");
 
   return (
     <>

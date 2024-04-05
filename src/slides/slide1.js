@@ -396,8 +396,8 @@ const Slide4 = ({ pptx, data, tableid }) => {
 
           //main table
           const tableElement = document.getElementById(tableid + "table");
-          console.log(tableid + "table");
-          console.log(tableElement);
+          // console.log(tableid + "table");
+          // console.log(tableElement);
           const svgDataUri = convertTableToSvg(tableElement);
 
           await convertSvgToPng(svgDataUri)
@@ -419,7 +419,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
             const momtableElement = document.getElementById(
               tableid + "momtable"
             );
-            console.log(momtableElement);
+            // console.log(momtableElement);
             const momsvgDataUri = convertTableToSvg(momtableElement);
             await convertSvgToPng(momsvgDataUri)
               .then((pngDataUri) => {
@@ -476,7 +476,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
                   bold: true,
                 });
                 slide.addImage(momImageOptions);
-                console.log("slide1 rendered");
+                // console.log("slide1 rendered");
               })
               .catch((error) => {
                 console.error("Error converting SVG to PNG:", error);
@@ -486,7 +486,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
           console.error("Error converting SVG to image:", error);
         }
       });
-      console.log("HHHHHHH");
+      // console.log("HHHHHHH");
     }
   }, [chartImageURI]);
 

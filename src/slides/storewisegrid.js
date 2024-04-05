@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-const Table = ({ data, id }) => {
+const Table = ({ data, id,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -14,7 +14,8 @@ const Table = ({ data, id }) => {
         color: "white",
         width: "80%",
       }}
-      id={"storewisetable" + id}
+      // id={"storewisetable" + id}
+      id={tableid+id+"table"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -39,32 +40,35 @@ const Table = ({ data, id }) => {
   );
 };
 
-const StoreWiseGridVisibility = ({ pptx,title }) => {
-  console.log('3 Storewisegridvisibility')
-  const data = [
-    [
-      ["Location", "Zomato", "Swiggy"],
-      ["Jogeshwari", 0, 0],
-      ["Vashi", 0, 0],
-      ["Mohammad Ali Road", 0, 0],
-      ["Marol", 0, 0],
-      ["Jogeshwari", 0, 0],
-      ["Vashi", 0, 0],
-      ["Mohammad Ali Road", 0, 0],
-      ["Marol", 0, 0],
-      ["Marol", 0, 0],
-       ["Jogeshwari", 0, 0],
-       ["Jogeshwari", 0, 0],
-    ],
-    [
+const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
+  // console.log('3 Storewisegridvisibility')
+  // const data = [
+  //   [
+  //     ["Location", "Zomato", "Swiggy"],
+  //     ["Jogeshwari", 0, 0],
+  //     ["Vashi", 0, 0],
+  //     ["Mohammad Ali Road", 0, 0],
+  //     ["Marol", 0, 0],
+  //     ["Jogeshwari", 0, 0],
+  //     ["Vashi", 0, 0],
+  //     ["Mohammad Ali Road", 0, 0],
+  //     ["Marol", 0, 0],
+  //     ["Marol", 0, 0],
+  //      ["Jogeshwari", 0, 0],
+  //      ["Jogeshwari", 0, 0],
+  //   ],
+  //   [
     
-      ["Jogeshwari", 0, 0],
-      ["Vashi", 0, 0],
-      ["Mohammad Ali Road", 0, 0],
-      ["Marol", 0, 0],
-    ],
-  ];
-  console.log('8 StoreWiseGridVisibility')
+  //     ["Jogeshwari", 0, 0],
+  //     ["Vashi", 0, 0],
+  //     ["Mohammad Ali Road", 0, 0],
+  //     ["Marol", 0, 0],
+  //   ],
+  // ];
+  // console.log('8 StoreWiseGridVisibility')
+  console.log(tableid)
+  console.log(data.table)
+  const tabledata = [data.table]
 
   const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
@@ -191,14 +195,18 @@ const StoreWiseGridVisibility = ({ pptx,title }) => {
   useEffect(() => {
     // const node = document.createElement("div");
     // node.innerHTML = chartImageURI;
-    for (let i = 0; i < data.length; i++) {
+    console.log('inside grid')
+    console.log(tabledata.length)
+    for (let i = 0; i < tabledata.length; i++) {
       const parser = new DOMParser();
 
       try {
         const slide = pptx.addSlide();
         slide.background = { fill: "000000" };
         //main table
-        const tableElement = document.getElementById("storewisetable"+(i));
+        console.log(tableid+i+"table")
+        const tableElement = document.getElementById(tableid+i+"table");
+        console.log(tableElement)
         const svgDataUri = convertTableToSvg(tableElement);
         const numRows = tableElement.rows.length;
         const NoOfPages = numRows / 6;
@@ -213,7 +221,7 @@ const StoreWiseGridVisibility = ({ pptx,title }) => {
               h: 4,
             });
 
-            slide.addText("Store Wise Grid Visibility", {
+            slide.addText(data.title, {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -249,9 +257,9 @@ const StoreWiseGridVisibility = ({ pptx,title }) => {
 
   return (
     <>
-    <h1>{title}</h1>
-      {data.map((dat, index) => (
-        <Table data={dat} id={index} />
+    <h1>{data.title}</h1>
+      {tabledata.map((dat, index) => (
+        <Table data={dat} tableid={tableid} id={index} />
       ))}
       <h1>end</h1>
     </>

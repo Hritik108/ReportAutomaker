@@ -2796,6 +2796,11 @@ function App() {
         arraySlides.push( <Slide2 tableid="slide_8" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
 
       }
+      else if(prop == "slide_9"){
+        console.log(allData[prop])
+        arraySlides.push( <StoreWiseGridVisibility tableid="slide_9" pptx={pptx} data={allData[prop]}/>,)
+
+      }
       else if(prop ==  "slide_18"){
         console.log(allData[prop])
         arraySlides.push( <Slide18 tableid="slide_18" pptx={pptx} data={allData[prop]} />,)
