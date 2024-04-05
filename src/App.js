@@ -2752,79 +2752,132 @@ function App() {
         // arraySlides.push(<TitleSLide data={subzone} pptx={pptx}/>)
 
         for (var slide in allData[prop][subzone]) {
-          if(slide  == 'slide_1'){
+          if (slide == "slide_1") {
             console.log(allData[prop][subzone][slide]);
-            arraySlides.push(<Slide26 subzonename={subzone} tableid={subzone+slide} data={allData[prop][subzone][slide]} pptx={pptx} />)
-          }
-          else if(slide  == 'slide_2'){
+            arraySlides.push(
+              <Slide26
+                subzonename={subzone}
+                tableid={subzone + slide}
+                data={allData[prop][subzone][slide]}
+                pptx={pptx}
+              />
+            );
+          } else if (slide == "slide_2") {
             console.log(allData[prop][subzone][slide]);
-            arraySlides.push(<Slide27 tableid={subzone+slide} data={allData[prop][subzone][slide]} pptx={pptx} />)
-          }
-          else if(slide  == 'slide_3'){
+            arraySlides.push(
+              <Slide27
+                tableid={subzone + slide}
+                data={allData[prop][subzone][slide]}
+                pptx={pptx}
+              />
+            );
+          } else if (slide == "slide_3") {
             console.log(allData[prop][subzone][slide]);
-            arraySlides.push(<SlideX data={allData[prop][subzone][slide]} pptx={pptx}/>)
-          }
-          else if(slide  == 'slide_4'){
+            arraySlides.push(
+              <SlideX data={allData[prop][subzone][slide]} pptx={pptx} />
+            );
+          } else if (slide == "slide_4") {
             console.log(allData[prop][subzone][slide]);
-            arraySlides.push(<Slide31 data={allData[prop][subzone][slide]} pptx={pptx}/>)
-          }
-          else if(slide  == 'slide_5'){
+            arraySlides.push(
+              <Slide31 data={allData[prop][subzone][slide]} pptx={pptx} />
+            );
+          } else if (slide == "slide_5") {
             console.log(allData[prop][subzone][slide]);
-            arraySlides.push(<Slide32 data={allData[prop][subzone][slide]} pptx={pptx}/>)
+            arraySlides.push(
+              <Slide32 data={allData[prop][subzone][slide]} pptx={pptx} />
+            );
           }
-  
         }
       }
     } else {
-      console.log(prop); 
-      if(prop == "slide_4"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide4 tableid="slide_4" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
-      }
-      else if(prop == "slide_6"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide4 tableid="slide_6" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
-
-      }
-      else if(prop == "slide_7"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide4 tableid="slide_7" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
-
-      }
-      else if(prop == "slide_8"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide2 tableid="slide_8" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
-
-      }
-      else if(prop == "slide_9"){
-        console.log(allData[prop])
-        arraySlides.push( <StoreWiseGridVisibility tableid="slide_9" pptx={pptx} data={allData[prop]}/>,)
-
-      }
-      else if(prop ==  "slide_18"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide18 tableid="slide_18" pptx={pptx} data={allData[prop]} />,)
-      }
-      else if(prop ==  "slide_19"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide20 tableid="slide_19" pptx={pptx} data={allData[prop]} />,)
-      }
-      else if(prop ==  "slide_20"){
-        console.log(allData[prop])
-        arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_20" pptx={pptx} data={allData[prop]} />,)
-      }
-      else if(prop ==  "slide_21"){
-        console.log(allData[prop])
-        arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_21" pptx={pptx} data={allData[prop]} />,)
-      }
-      else if(prop ==  "slide_22"){
-        console.log(allData[prop])
-        arraySlides.push( <Slide4 tableid="slide_21" pptx={pptx} data={allData[prop]} />,)
+      console.log(prop);
+      if (prop == "slide_4") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide4
+            tableid="slide_4"
+            pptx={pptx}
+            data={allData[prop]}
+            title="Slide 4"
+          />
+        );
+      } else if (prop == "slide_6") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide4
+            tableid="slide_6"
+            pptx={pptx}
+            data={allData[prop]}
+            title="Slide 4"
+          />
+        );
+      } else if (prop == "slide_7") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide4
+            tableid="slide_7"
+            pptx={pptx}
+            data={allData[prop]}
+            title="Slide 4"
+          />
+        );
+      } else if (prop == "slide_8") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide2
+            tableid="slide_8"
+            pptx={pptx}
+            data={allData[prop]}
+            title="Slide 4"
+          />
+        );
+      } else if (prop == "slide_9") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <StoreWiseGridVisibility
+            tableid="slide_9"
+            pptx={pptx}
+            data={allData[prop]}
+          />
+        );
+      } else if (prop == "slide_18") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide18 tableid="slide_18" pptx={pptx} data={allData[prop]} />
+        );
+      } else if (prop == "slide_19") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide20 tableid="slide_19" pptx={pptx} data={allData[prop]} />
+        );
+      } else if (prop == "slide_20") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <StoreWiseOrderIDWiseRatingSplit
+            tableid="slide_20"
+            pptx={pptx}
+            data={allData[prop]}
+          />
+        );
+      } else if (prop == "slide_21") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <StoreWiseOrderIDWiseRatingSplit
+            tableid="slide_21"
+            pptx={pptx}
+            data={allData[prop]}
+          />
+        );
+      } else if (prop == "slide_22") {
+        console.log(allData[prop]);
+        arraySlides.push(
+          <Slide4 tableid="slide_21" pptx={pptx} data={allData[prop]} />
+        );
       }
     }
   }
 
-  console.log(arraySlides)
+  console.log(arraySlides);
 
   const generateNextPPT = () => {
     setCurrentIndex(currentIndex + 1);
@@ -2839,10 +2892,16 @@ function App() {
           <React.Fragment key={index}>{component}</React.Fragment>
         ))} */}
 
-        {arraySlides.map((component, index) => (
+        {/* <Slide18 tableid="slide_18" pptx={pptx} data={allData["slide_18"]} /> */}
+        <Slide4
+          tableid="slide_6"
+          pptx={pptx}
+          data={allData["slide_4"]}
+          title="Slide 4"
+        />
+        {/* {arraySlides.map((component, index) => (
           <React.Fragment key={index}>{component}</React.Fragment>
-        ))}
-       
+        ))} */}
       </div>
       <button onClick={generateppt}>Generate PPT</button>
     </>

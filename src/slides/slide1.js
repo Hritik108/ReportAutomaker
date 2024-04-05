@@ -147,6 +147,19 @@ const numberTrimmer = (value, index) => {
   return value ? parseFloat(equivalentWithIn100).toFixed(2) + val : value;
 };
 
+// Function to format numbers
+const formatNumber = (number) => {
+  if (number >= 10000000) {
+    return (number / 10000000).toFixed(2) + " Cr";
+  } else if (number >= 100000) {
+    return (number / 100000).toFixed(2) + " L";
+  } else if (number >= 1000) {
+    return (number / 1000).toFixed(2) + " K";
+  } else {
+    return number;
+  }
+};
+
 const Slide4 = ({ pptx, data, tableid }) => {
   const [chartImageURI, setChartImageURI] = useState("");
 
@@ -271,7 +284,23 @@ const Slide4 = ({ pptx, data, tableid }) => {
     return dataUri;
   };
 
+  const formatNumber = (number) => {
+    const crore = 10000000;
+    const lakh = 100000;
+    const thousand = 1000;
+    if (number >= crore) {
+      return (number / crore).toFixed(2) + " Cr";
+    } else if (number >= lakh) {
+      return (number / lakh).toFixed(2) + " L";
+    } else if (number >= thousand) {
+      return (number / thousand).toFixed(2) + " K";
+    } else {
+      return number.toString();
+    }
+  };
+
   const options = {
+    chartLanguage: "en-IN",
     series: {
       0: {
         annotations: { stem: { length: -30 } },
@@ -287,12 +316,15 @@ const Slide4 = ({ pptx, data, tableid }) => {
         tooltip: false,
       },
     },
+
     vAxes: {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "###,###,###",
       },
     },
+
     legend: { position: "top" },
     annotations: {
       alwaysOutside: true,
@@ -362,7 +394,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
                 data: pngDataUri,
                 x: 0.6,
                 y: 1,
-                w: 4.5,
+                w: 7,
                 h: 3,
               });
 
@@ -508,6 +540,8 @@ const Slide4 = ({ pptx, data, tableid }) => {
               setChartImageURI(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
+          chartLanguage={"lt"}
+
           // ref={chartRef}
         />
       </div>
