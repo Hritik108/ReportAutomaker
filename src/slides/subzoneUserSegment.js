@@ -5,7 +5,7 @@ import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
 
-const Slide31 = ({ pptx, data,title }) => {
+const Slide31 = ({ pptx, data }) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
   console.log('13 Slide31')
@@ -38,7 +38,9 @@ const Slide31 = ({ pptx, data,title }) => {
     },
     isStacked: "percent", // Specify that the chart should be stacked in percentage
     legend: { position: "top" }, // Position legend at the top
-
+    'tooltip' : {
+      trigger: 'none'
+    },
     hAxis: {
       gridlines: { color: "transparent" }, // Hide horizontal gridlines
     },
@@ -118,7 +120,7 @@ const Slide31 = ({ pptx, data,title }) => {
                 h: 3,
               });
 
-              slide.addText("Overall Revenues - month on month", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -172,7 +174,7 @@ const Slide31 = ({ pptx, data,title }) => {
   return (
     <>
       {/* <div id="googlegraphs1"> */}
-      <h1>{title}</h1>
+      <h1>{data.title}</h1>
       <Chart
         chartType="ColumnChart"
         data={graphData1}

@@ -237,6 +237,9 @@ const Slide24 = ({ pptx, data, title }) => {
       2: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
       3: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
     },
+    'tooltip' : {
+      trigger: 'none'
+    },
     vAxes: {
       // 0: {
       //   gridlines: { color: "transparent" },

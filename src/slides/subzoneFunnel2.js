@@ -5,7 +5,7 @@ import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
 
-const SlideX = ({ pptx, data, title }) => {
+const SlideX = ({ pptx, data}) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
   const graphData1 = data.graph1;
@@ -25,6 +25,9 @@ const SlideX = ({ pptx, data, title }) => {
       1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
       2: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
       3: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
+    },
+    'tooltip' : {
+      trigger: 'none'
     },
     vAxes: {
       0: {
@@ -122,7 +125,7 @@ const SlideX = ({ pptx, data, title }) => {
                 h: 3,
               });
 
-              slide.addText("Overall Revenues - month on month", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -174,7 +177,7 @@ const SlideX = ({ pptx, data, title }) => {
 
   return (
     <>
-      <h1>{title}</h1>
+      <h1>{data.title}</h1>
 
       <Chart
         chartType="ScatterChart"

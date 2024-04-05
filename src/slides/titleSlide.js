@@ -40,21 +40,19 @@ const Table = ({ data, id }) => {
   );
 };
 
-const TitleSLide = ({ pptx }) => {
+const TitleSLide = ({ data,pptx }) => {
   
   
 
 
   useEffect(() => {
-    // const node = document.createElement("div");
-    // node.innerHTML = chartImageURI;
-
+    const executeCodeAfterTimeout = () => {
       try {
-        const slide = pptx.addSlide();
-        slide.background = { fill: "000000" };
-        //main table
-        
-            slide.addText("Title", {
+          const slide = pptx.addSlide();
+          slide.background = { fill: "000000" };
+          //main table
+      
+          slide.addText(data, {
               y: 2,
               x: 0.6,
               w: 10,
@@ -63,32 +61,38 @@ const TitleSLide = ({ pptx }) => {
               fontFace: "Calibri",
               fontSize: 60,
               bold: true,
-            });
+          });
 
-
-        slide.addText(
-                  "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-                  {
-                    y: 4.5,
-                    x: 2.2,
-                    w: 10,
-                    h: 2,
-                    color: "FFFFFF",
-                    fontFace: "Calibri",
-                    fontSize: 8,
-                  }
-                );
+          slide.addText(
+              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+              {
+                  y: 4.5,
+                  x: 2.2,
+                  w: 10,
+                  h: 2,
+                  color: "FFFFFF",
+                  fontFace: "Calibri",
+                  fontSize: 8,
+              }
+          );
 
       } catch (error) {
-        console.error("Error converting SVG to image:", error);
+          console.error("Error converting SVG to image:", error);
       }
+  };
+
+  // Set a timeout to execute some code after 5000 milliseconds (5 seconds)
+  setTimeout(() => {
+      // Call the function to execute code after the timeout
+      executeCodeAfterTimeout();
+  }, 5000);
     
   
   }, []);
 
   return (
     <>
-      <h1>Title</h1>
+      <h1>{data}</h1>
     </>
   );
 };

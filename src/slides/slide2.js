@@ -180,6 +180,14 @@ const Slide2 = ({ data, pptx, title }) => {
         bold: true,
       },
     },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      height: "90%",
+    },
   };
 
   const convertTableToSvg = (tableElement) => {
@@ -252,6 +260,8 @@ const Slide2 = ({ data, pptx, title }) => {
     // Encode SVG XML string to base64
     const svgBase64 = btoa(svgXml);
 
+    
+
     // Construct data URI
     const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
 
@@ -304,8 +314,8 @@ const Slide2 = ({ data, pptx, title }) => {
       svgs.forEach(async (svg, index) => {
         try {
           const svgData = new XMLSerializer().serializeToString(svg);
-          const base64Image = btoa(svgData);
-          console.log(svg);
+          const utf8Data = unescape(encodeURIComponent(svgData));
+          const base64Image = btoa(utf8Data);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
           // console.log(imageuri);
@@ -420,7 +430,7 @@ const Slide2 = ({ data, pptx, title }) => {
           options={options}
           // graph_id="ScatterChart2"
           width="70%"
-          height={"400px"}
+          height={"470px"}
           legend_toggle={true}
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {

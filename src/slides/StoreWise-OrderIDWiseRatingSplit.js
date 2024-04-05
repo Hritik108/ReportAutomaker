@@ -129,67 +129,10 @@ const Mom2Table = ({ data }) => {
 const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
 
 
-  // const [options, setOptions] = useState({});
+ 
   const [chartImageURI2, setChartImageURI2] = useState("");
 
   console.log('7 StoreWiseOrderIDWiseRatingSplit')
-//   const graphData = data.graph.graphdata;
-  // const graphData = [
-  //   [
-  //     "City",
-  //     "Good",
-  //     { role: "annotation" },
-  //     "Neutral",
-  //     { role: "annotation" },
-  //     "Bad",
-  //     { role: "annotation" },
-  //   ],
-  //   [
-  //     "New York City, NY",
-  //     { v: 4000000, f: "4M" },
-  //     "4M",
-  //     { v: 3000000, f: "3M" },
-  //     "3M",
-  //     { v: 1000000, f: "1M" },
-  //     "1M",
-  //   ],
-  //   [
-  //     "Los Angeles, CA",
-  //     { v: 2000000, f: "2M" },
-  //     "2M",
-  //     { v: 1500000, f: "1.5M" },
-  //     "1.5M",
-  //     { v: 800000, f: "800K" },
-  //     "800K",
-  //   ],
-  //   [
-  //     "Chicago, IL",
-  //     { v: 1500000, f: "1.5M" },
-  //     "1.5M",
-  //     { v: 1000000, f: "1M" },
-  //     "1M",
-  //     { v: 600000, f: "600K" },
-  //     "600K",
-  //   ],
-  //   [
-  //     "Houston, TX",
-  //     { v: 1200000, f: "1.2M" },
-  //     "1.2M",
-  //     { v: 800000, f: "800K" },
-  //     "800K",
-  //     { v: 400000, f: "400K" },
-  //     "400K",
-  //   ],
-  //   [
-  //     "Philadelphia, PA",
-  //     { v: 1000000, f: "1M" },
-  //     "1M",
-  //     { v: 700000, f: "700K" },
-  //     "700K",
-  //     { v: 300000, f: "300K" },
-  //     "300K",
-  //   ],
-  // ];
 
   const graphData = data.graph
 
@@ -211,6 +154,9 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
         fontSize: 12, // Adjust the font size of annotations
       },
     },
+    'tooltip' : {
+      trigger: 'none'
+    },
     // chartArea: {
     //   left: 70,
     //   top: 70,
@@ -224,15 +170,15 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
   
 //   const table = data.table;
 
-  const mom = [
-    ["Revenue", "-100%"],
-    ["Orders", "-100%"],
-  ];
+  // const mom = [
+  //   ["Revenue", "-100%"],
+  //   ["Orders", "-100%"],
+  // ];
 
-  const mom2 = [
-    ["Revenue", "-100%"],
-    ["Orders", "-100%"],
-  ];
+  // const mom2 = [
+  //   ["Revenue", "-100%"],
+  //   ["Orders", "-100%"],
+  // ];
 
   const convertTableToSvg = (tableElement) => {
     const cellWidth = 65;
@@ -453,7 +399,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
           <Chart
           chartType="BarChart"
           data={graphData}
-          options={{...options ,isStacked: "percent"}}
+          options={{...options}}
           graph_id="verticalstackBarChart2"
           height={"700px"}
           legend_toggle={true}

@@ -5,7 +5,7 @@ import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
 
-const Slide32 = ({ pptx, data,title }) => {
+const Slide32 = ({ pptx, data}) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
   console.log('14 Slide32')
@@ -40,7 +40,9 @@ const Slide32 = ({ pptx, data,title }) => {
     hAxis: {
       gridlines: { color: "transparent" }, // Hide horizontal gridlines
     },
-
+    'tooltip' : {
+      trigger: 'none'
+    },
     vAxis: {}, // Format the vertical axis labels as percentages
     annotations: {
       textStyle: {
@@ -116,7 +118,7 @@ const Slide32 = ({ pptx, data,title }) => {
                 h: 3,
               });
 
-              slide.addText("Overall Revenues - month on month", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -168,7 +170,7 @@ const Slide32 = ({ pptx, data,title }) => {
   console.log("hello");
 
   return (
-    <><h1>{title}</h1>
+    <><h1>{data.title}</h1>
       {/* <div id="googlegraphs1"> */}
       <Chart
         chartType="ColumnChart"

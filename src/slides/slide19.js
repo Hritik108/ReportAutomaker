@@ -128,11 +128,23 @@ const Slide19 = ({ pptx }) => {
     seriesType: "bars",
     series: { 5: { type: "line" } },
     // legend: { position: "top" }, // Move legend to the top
+    legend: { position: "top",maxLines:5 },
     annotations: {
       textStyle: {
         fontSize: 12,
         color: "#000000", // Annotation text color
       },
+    },
+    'tooltip' : {
+      trigger: 'none'
+    },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      // height: "90%",
     },
   };
 

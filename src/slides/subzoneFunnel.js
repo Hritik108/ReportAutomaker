@@ -42,7 +42,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const MomTable = ({ data }) => {
+const MomTable = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -56,7 +56,7 @@ const MomTable = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="Slide27momtable"
+      id={tableid+"momtable"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -79,84 +79,18 @@ const MomTable = ({ data }) => {
   );
 };
 
-const Mo2mTable = ({ data }) => {
-  const cellWidth = 120;
-  const cellHeight = 10;
-  const borderWidth = 1;
-  const fontSize = 12;
 
-  return (
-    <table
-      style={{
-        borderCollapse: "collapse",
-        background: "black",
-        color: "white",
-        width: "20%",
-      }}
-      id="Slide27mo2mtable"
-    >
-      <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <td
-                key={cellIndex}
-                style={{
-                  border: "1px solid white",
-                  padding: "8px",
-                }}
-              >
-                {cell}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const Slide27 = ({ pptx, data,title }) => {
-
-  console.log('12 Slide27')
-
-
+const Slide27 = ({ pptx,tableid, data}) => {
 
   const [chartImageURI, setChartImageURI] = useState("");
 
   const graphData = data.graph
 
-  // const graphData = [
-  //   [
-  //     "",
-  //     "Menu opens",
-  //     { role: "annotation" },
-  //     "M2C in %",
-  //     { role: "annotation" },
-  //     "M2O in %",
-  //     { role: "annotation" },
-  //     "C2O in %",
-  //     { role: "annotation" },
-  //   ],
-  //   ["Jul-2023", 21370, 21370, 33, 33, 19, 19, 55, 55],
-  //   ["Aug-2023", 25470, 25470, 34, 34, 17, 17, 48, 48],
-  //   ["Sep-2023", 36550, 36550, 34, 34, 19, 19, 55, 55],
-  //   ["Oct-2023", 35310, 35310, 37, 37, 20, 20, 55, 55],
-  //   ["Nov-2023", 35820, 35820, 37, 37, 21, 21, 56, 56],
-  //   ["Dec-2023", 39040, 39040, 36, 36, 20, 20, 54, 54],
-  // ];
-//   const table = data.table;
-
-  // const mom = [
-  //   ["Revenue", "-100%"],
-  //   ["Orders", "-100%"],
-  // ];
+ 
   const mom = data.mom
 
-  // const mom2 = [
-  //   ["Revenue", "-90%"],
-  //   ["Orders", "-90%"],
-  // ];
+
+
 
   const options = {
     series: {
@@ -170,6 +104,9 @@ const Slide27 = ({ pptx, data,title }) => {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
       },
+    },
+    'tooltip' : {
+      trigger: 'none'
     },
     legend: { position: "top" },
     annotations: {
@@ -319,7 +256,7 @@ const Slide27 = ({ pptx, data,title }) => {
               h: 4.2,
             });
 
-            slide.addText("Malad  West - Revenues & Orders", {
+            slide.addText(data.title, {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -348,8 +285,8 @@ const Slide27 = ({ pptx, data,title }) => {
           .catch((error) => {});
 
         //mom table
-        const momtableElement = document.getElementById("Slide27momtable");
-
+        const momtableElement = document.getElementById(tableid+"momtable");
+   
         const momsvgDataUri = convertTableToSvg(momtableElement);
         await convertSvgToPng(momsvgDataUri)
           .then((pngDataUri) => {
@@ -357,8 +294,8 @@ const Slide27 = ({ pptx, data,title }) => {
               data: pngDataUri,
               x: 8,
               y: 1.2,
-              w: 1.7,
-              h: 0.7,
+              w: 1.75,
+              h: 0.85,
             };
 
             slide.addImage(momImageOptions);
@@ -389,7 +326,7 @@ const Slide27 = ({ pptx, data,title }) => {
 
 
   return (
-    <><h1>{title}</h1>
+    <><h1>{data.title}</h1>
       <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
@@ -408,7 +345,7 @@ const Slide27 = ({ pptx, data,title }) => {
         />
       </div>
       {/* <DataTable id="table" data={table} /> */}
-      <MomTable id="Slide27momtable" data={mom} />
+      <MomTable tableid={tableid} data={mom} />
       {/* <Mo2mTable id="Slide27mom2table" data={mom2} /> */}
     </>
   );

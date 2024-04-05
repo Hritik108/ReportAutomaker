@@ -77,21 +77,11 @@ const Table2 = ({ data }) => {
 };
 
 const Slide20 = ({ pptx }) => {
-  console.log('10 Slide20')
+  console.log("10 Slide20");
   const countRef = useRef(0);
-  // console.log("App body: "+ ++countRef.current)
-  // const [data, setData] = useState([]);
   const [chartImageURI, setChartImageURI] = useState("");
   const chartRef = useRef(null);
 
-
-  // const graphData = [
-  //     ["sub zone", "Total Food Issue", { role: "annotation" }, "Quality issue", "Quantity issue", "packaging", "wrong item", "special inst issue", "Bad order"],
-  //     ["Malad west", 31, 31, 31, 1, 2, 4, 0, 78],
-  //     ["dadar", 10,10, 31, 1, 34, 4, 0, 28],
-  //     ["navi mumbai", 3,3, 31, 1, 3, 4, 0, 18],
-  //     ["bkc", 20,20, 31, 1, 2, 4, 0, 8]
-  // ];
   const table1 = [
     ["Total orders", 0],
     ["ORS", 0],
@@ -123,6 +113,18 @@ const Slide20 = ({ pptx }) => {
         fontSize: 12,
         color: "#000000", // Annotation text color
       },
+    },
+    legend: { position: "top", maxLines: 5 },
+    tooltip: {
+      trigger: "none",
+    },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      // height: "90%",
     },
   };
 
@@ -289,10 +291,9 @@ const Slide20 = ({ pptx }) => {
         rect.setAttribute("height", cellHeight);
         // Check cell content for Zomato or Swiggy and set background color accordingly
         const cellContent = tableElement.rows[i].cells[j].textContent;
-        if (cellContent.includes("Reason")|| cellContent == "%") {
+        if (cellContent.includes("Reason") || cellContent == "%") {
           rect.setAttribute("fill", "orange");
-        } 
-        else {
+        } else {
           rect.setAttribute("fill", "black");
         }
         rect.setAttribute("stroke", "white");

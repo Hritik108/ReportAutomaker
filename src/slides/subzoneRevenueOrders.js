@@ -42,7 +42,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const MomTable = ({ data }) => {
+const MomTable = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -56,7 +56,7 @@ const MomTable = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="Slide26momtable"
+      id={tableid+"momtable"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -79,7 +79,7 @@ const MomTable = ({ data }) => {
   );
 };
 
-const Mo2mTable = ({ data }) => {
+const Mo2mTable = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -93,7 +93,7 @@ const Mo2mTable = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="Slide26mo2mtable"
+      id={tableid+"mo2mtable"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -116,7 +116,7 @@ const Mo2mTable = ({ data }) => {
   );
 };
 
-const Slide26 = ({ pptx, data,title }) => {
+const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
 
 
   const [chartImageURI, setChartImageURI] = useState("");
@@ -142,6 +142,9 @@ const Slide26 = ({ pptx, data,title }) => {
         fontSize: 14,
         bold: true,
       },
+    },
+    'tooltip' : {
+      trigger: 'none'
     },
     chartArea: {
       left: 70,
@@ -252,6 +255,40 @@ const Slide26 = ({ pptx, data,title }) => {
   useEffect(() => {
 
     if(chartImageURI !== ""){
+
+    //subzone slide code
+
+    const titleSlide = pptx.addSlide();
+    titleSlide.background = { fill: "000000" };
+    //main table
+
+    titleSlide.addText(subzonename, {
+        y: 2,
+        x: 0.6,
+        w: 10,
+        h: 2,
+        color: "FFFFFF",
+        fontFace: "Calibri",
+        fontSize: 60,
+        bold: true,
+    });
+
+    titleSlide.addText(
+        "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+        {
+            y: 4.5,
+            x: 2.2,
+            w: 10,
+            h: 2,
+            color: "FFFFFF",
+            fontFace: "Calibri",
+            fontSize: 8,
+        }
+    );
+
+
+
+      ///slide_1
     const slide = pptx.addSlide();
     slide.background = { fill: "000000" };
 
@@ -267,7 +304,9 @@ const Slide26 = ({ pptx, data,title }) => {
     svgs.forEach(async (svg, index) => {
       try {
         const svgData = new XMLSerializer().serializeToString(svg);
-        const base64Image = btoa(svgData);
+        // const base64Image = btoa(svgData);
+        const utf8Data = unescape(encodeURIComponent(svgData));
+        const base64Image = btoa(utf8Data);
 
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
 
@@ -281,7 +320,7 @@ const Slide26 = ({ pptx, data,title }) => {
               h: 4.2,
             });
 
-            slide.addText("Malad  West - Revenues & Orders", {
+            slide.addText(data.title, {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -310,7 +349,7 @@ const Slide26 = ({ pptx, data,title }) => {
           .catch((error) => {});
 
         //mom table
-        const momtableElement = document.getElementById("Slide26momtable");
+        const momtableElement = document.getElementById(tableid+"momtable");
 
         const momsvgDataUri = convertTableToSvg(momtableElement);
         await convertSvgToPng(momsvgDataUri)
@@ -319,8 +358,8 @@ const Slide26 = ({ pptx, data,title }) => {
               data: pngDataUri,
               x: 8,
               y: 1.2,
-              w: 1.7,
-              h: 0.7,
+              w: 1.75,
+              h: 0.85,
             };
 
             slide.addImage(momImageOptions);
@@ -328,7 +367,7 @@ const Slide26 = ({ pptx, data,title }) => {
               y: 0.7,
               x: 8.5,
               w: 0.75,
-              h: 0.75,
+              h: 0.85,
               color: "FFFFFF",
               fontFace: "Calibri",
               fontSize: 15,
@@ -341,7 +380,7 @@ const Slide26 = ({ pptx, data,title }) => {
           });
 
         //mom2 table
-        const mom2tableElement = document.getElementById("Slide26mo2mtable");
+        const mom2tableElement = document.getElementById(tableid+"mo2mtable");
         // console.log(mom2tableElement)
         const mom2svgDataUri = convertTableToSvg(mom2tableElement);
         // console.log(mom2svgDataUri)
@@ -351,8 +390,8 @@ const Slide26 = ({ pptx, data,title }) => {
               data: pngDataUri,
               x: 8,
               y: 2.75,
-              w: 1.7,
-              h: 0.7,
+              w: 1.75,
+              h: 0.85,
             };
             slide.addText("MO2M", {
               y: 2.25,
@@ -380,13 +419,12 @@ const Slide26 = ({ pptx, data,title }) => {
 
 
   return (
-    <><h1>{title}</h1>
+    <><h1>{data.title}</h1>
       <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
           data={graphData}
           options={options}
-          graph_id="ScatterChartSlide26"
           width="70%"
           height={"400px"}
           legend_toggle={true}
@@ -400,8 +438,8 @@ const Slide26 = ({ pptx, data,title }) => {
         />
       </div>
       {/* <DataTable id="table" data={table} /> */}
-      <MomTable id="Slide26momtable" data={mom} />
-      <Mo2mTable id="Slide26mom2table" data={mom2} />
+      <MomTable tableid={tableid} data={mom} />
+      <Mo2mTable tableid={tableid} data={mom2} />
     </>
   );
 };
