@@ -126,7 +126,7 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
+const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
 
 
  
@@ -319,7 +319,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
         
         const imageuri = `data:image/svg+xml;base64,${base64Image}`;
         // const imageuri2 = `data:image/svg+xml;base64,${base64Image2}`;
-        console.log(imageuri)
+        // console.log(imageuri)
         await convertSvgToPng(imageuri)
           .then((pngDataUri) => {
             slide.addImage({
@@ -330,7 +330,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
               h: 4,
             });
 
-            slide.addText("Store Wise -Order Wise Rating Split", {
+            slide.addText(data.title, {
               y: -0.5,
               x: 0.6,
               w: 10,
@@ -356,7 +356,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
             //  pptx.writeFile("output.pptx");
           })
 
-          .catch((error) => {});
+          .catch((error) => {console.log(error)});
 
           // await convertSvgToPng(imageuri2).then((pngDataUri) => {
           //   slide.addImage({
@@ -377,11 +377,11 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
     });
   }
   }, [chartImageURI2]);
-
-
+  console.log(graphData)
+console.log(graphData.length)
   return (
-    <><h1>{title}</h1>
-      <div id="googlegraphs">
+    <><h1>{data.title}</h1>
+      {/* <div id="googlegraphs"> */}
       {/* <Chart
           chartType="BarChart"
           data={graphData}
@@ -396,11 +396,11 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
         /> */}
+        {graphData.length > 1  &&
           <Chart
           chartType="BarChart"
           data={graphData}
-          options={{...options}}
-          graph_id="verticalstackBarChart2"
+          options={options}
           height={"700px"}
           legend_toggle={true}
           chartPackage={["controls"]}
@@ -410,7 +410,8 @@ const StoreWiseOrderIDWiseRatingSplit = ({ data,pptx,title}) => {
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
         />
-      </div>
+}
+      {/* </div> */}
 
     </>
   );

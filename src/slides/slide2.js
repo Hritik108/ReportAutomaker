@@ -74,7 +74,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const Table1 = ({ data }) => {
+const Table1 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -88,7 +88,7 @@ const Table1 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table1"
+      id={tableid+"table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -111,7 +111,7 @@ const Table1 = ({ data }) => {
   );
 };
 
-const Table2 = ({ data }) => {
+const Table2 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -125,7 +125,7 @@ const Table2 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table2"
+      id={tableid+"table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -148,7 +148,7 @@ const Table2 = ({ data }) => {
   );
 };
 
-const Slide2 = ({ data, pptx, title }) => {
+const Slide2 = ({ data, pptx,tableid, title }) => {
   // console.log("App body: "+ ++countRef.current)
 
   const [chartImageURI, setChartImageURI] = useState("");
@@ -332,7 +332,7 @@ const Slide2 = ({ data, pptx, title }) => {
                 h: 4.2,
               });
 
-              slide.addText("Pg 3 Overall Revenues - month on month", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -351,7 +351,7 @@ const Slide2 = ({ data, pptx, title }) => {
             });
 
           //mom table
-          const table1Element = document.getElementById("table1");
+          const table1Element = document.getElementById(tableid+"table1");
           // console.log(table1Element);
           const table1svgDataUri = convertTableToSvg(table1Element);
           await convertSvgToPng(table1svgDataUri)
@@ -374,7 +374,7 @@ const Slide2 = ({ data, pptx, title }) => {
             });
           console.log("hello");
           //mom2 table
-          const table2Element = document.getElementById("table2");
+          const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element);
 
           await convertSvgToPng(table2svgDataUri)
@@ -422,7 +422,7 @@ const Slide2 = ({ data, pptx, title }) => {
 
   return (
     <div>
-      <h2>{title}</h2>
+      <h2>{data.title}</h2>
       <div id="googlegraphs">
         <Chart
           chartType="ScatterChart"
@@ -442,8 +442,8 @@ const Slide2 = ({ data, pptx, title }) => {
         />
       </div>
 
-      <Table1 id="table1" data={table1} />
-      <Table2 id="table2" data={table2} />
+      <Table1 tableid={tableid} data={table1} />
+      <Table2 tableid={tableid} data={table2} />
       <div>
         <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
       </div>

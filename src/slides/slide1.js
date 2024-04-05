@@ -10,7 +10,7 @@ const DataTable = ({ data, tableid }) => {
   const cellHeight = 10;
   const borderWidth = 1;
   const fontSize = 12;
-  console.log(data);
+  // console.log(data);
 
   return (
     <table
@@ -163,7 +163,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
   // const graphData = [["", "Net Revenue", {"role": "annotation"}, "Orders", {"role": "annotation"}], ["July-2023", 7205, 7205, 1616197.0, 1616197.0], ["August-2023", 10466, 10466, 2313880.740234375, 2313880.740234375], ["September-2023", 10397, 10397, 2409313.0, 2409313.0], ["October-2023", 10226, 10226, 2404472.0, 2404472.0], ["November-2023", 7184, 7184, 1805468.0, 1805468.0], ["December-2023", 15438, 15438, 3767566.0, 3767566.0]]
   const table = data.table;
 
-  console.log(data.graph);
+  // console.log(data.graph);
   const graphData = data.graph;
   let newGraphData = [];
   for (let i = 0; i < data.graph.length; i++) {
@@ -178,7 +178,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
     newGraphData.push(temp);
   }
 
-  console.log(newGraphData);
+  // console.log(newGraphData);
 
   // console.log(data.mom)
   // const mom = [
@@ -454,7 +454,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
             const mom2tableElement = document.getElementById(
               tableid + "mo2mtable"
             );
-            console.log(mom2tableElement);
+            // console.log(mom2tableElement);
             const mom2svgDataUri = convertTableToSvg(mom2tableElement);
             await convertSvgToPng(mom2svgDataUri)
               .then((pngDataUri) => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
 
-const Table181 = ({ data }) => {
+const Table1 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -16,7 +16,7 @@ const Table181 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table181"
+      id={tableid+"table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -39,7 +39,7 @@ const Table181 = ({ data }) => {
   );
 };
 
-const Table182 = ({ data }) => {
+const Table2 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -53,7 +53,7 @@ const Table182 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="table182"
+      id={tableid+"table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -76,51 +76,10 @@ const Table182 = ({ data }) => {
   );
 };
 
-const Slide18 = ({ pptx, data, title }) => {
-  const countRef = useRef(0);
-  // console.log("App body: "+ ++countRef.current)
-  // const [data, setData] = useState([]);
-  const [chartEvents, setChartEvents] = useState([]);
+const Slide18 = ({ tableid,pptx, data, title }) => {
   const [chartImageURI, setChartImageURI] = useState("");
-  const [chartImage, setChartImage] = useState("");
-  const [check, setCheck] = useState(false);
-  const chartRef = useRef(null);
-  const chartImageURIRef = useRef(null);
-  const checkRef = useRef(false);
-  console.log("5 slide18");
-
-  // const graphData = [
-  //     ["sub zone", "Total Food Issue", { role: "annotation" }, "Quality issue", "Quantity issue", "packaging", "wrong item", "special inst issue", "Bad order"],
-  //     ["Malad west", 31, 31, 31, 1, 2, 4, 0, 78],
-  //     ["dadar", 10,10, 31, 1, 34, 4, 0, 28],
-  //     ["navi mumbai", 3,3, 31, 1, 3, 4, 0, 18],
-  //     ["bkc", 20,20, 31, 1, 2, 4, 0, 8]
-  // ];
-  const table1 = [
-    ["Total orders", 0],
-    ["ORS", 0],
-    ["ORS %", 0],
-  ];
-
-  const table2 = [
-    ["Reasons", "%"],
-    ["order_status_delay", 0],
-    ["order_cancellation", 0],
-    ["poor_quality", 0],
-    ["order_spilled", 0],
-    ["instructions_not_followed", 0],
-    ["wrong_order", 0],
-    ["rejection", 0],
-    ["missing_item", 0],
-    ["instructions", 0],
-    ["untagged", 0],
-    ["refund_query", 0],
-    ["billing_issues", 0],
-    ["food_not_delivered", 0],
-    ["others", 0],
-    ["Total", 100],
-  ];
-
+  const table1 = data.table1
+  const table2 = data.table2
   const graphData = data.graph;
 
   const options = {
@@ -306,7 +265,6 @@ const Slide18 = ({ pptx, data, title }) => {
       // const pptx = new pptxgen();
       const slide = pptx.addSlide();
       slide.background = { fill: "000000" };
-      // setChartImageURI(chartRef.current?.chart);
       const node = document.createElement("div");
       node.innerHTML = chartImageURI;
       // console.log(chartImageURI);
@@ -324,7 +282,7 @@ const Slide18 = ({ pptx, data, title }) => {
           const base64Image = btoa(utf8Data);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-          console.log(imageuri);
+          // console.log(imageuri);
 
           await convertSvgToPng(imageuri)
             .then((pngDataUri) => {
@@ -338,7 +296,7 @@ const Slide18 = ({ pptx, data, title }) => {
                 h: 4.2,
               });
 
-              slide.addText("Negative Reviews...", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -357,12 +315,12 @@ const Slide18 = ({ pptx, data, title }) => {
             });
 
           //mom table
-          const table1Element = document.getElementById("table181");
-          console.log(table1Element);
+          const table1Element = document.getElementById(tableid+"table1");
+          // console.log(table1Element);
           const table1svgDataUri = convertTableToSvg(table1Element, 15);
           await convertSvgToPng(table1svgDataUri)
             .then((pngDataUri) => {
-              console.log(pngDataUri);
+              // console.log(pngDataUri);
               const table1ImageOptions = {
                 data: pngDataUri,
                 x: 6.7,
@@ -380,12 +338,12 @@ const Slide18 = ({ pptx, data, title }) => {
             });
           console.log("hello");
           //mom2 table
-          const table2Element = document.getElementById("table182");
+          const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element, 12);
 
           await convertSvgToPng(table2svgDataUri)
             .then((pngDataUri) => {
-              console.log(pngDataUri);
+              // console.log(pngDataUri);
               const table2ImageOptions = {
                 data: pngDataUri,
                 x: 6.7,
@@ -394,7 +352,7 @@ const Slide18 = ({ pptx, data, title }) => {
                 h: 4,
               };
 
-              console.log(table2ImageOptions);
+              // console.log(table2ImageOptions);
               slide.addText(
                 "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
                 {
@@ -409,7 +367,7 @@ const Slide18 = ({ pptx, data, title }) => {
               );
               slide.addImage(table2ImageOptions);
               // pptx.writeFile("output.pptx");
-              console.log("slide2 rendered");
+              // console.log("slide2 rendered");
             })
             .catch((error) => {
               console.error("Error converting SVG to PNG:", error);
@@ -421,15 +379,12 @@ const Slide18 = ({ pptx, data, title }) => {
     }
   }, [chartImageURI]);
 
-  const generateppt = async () => {
-    console.log("hello");
-    setChartImageURI(chartRef.current?.chart);
-  };
+
 
   return (
     <div>
-      <h2>{title}</h2>
-      <div id="googlegraphs18">
+      <h2>{data.title}</h2>
+      {/* <div id="googlegraphs18"> */}
         <Chart
           chartType="ComboChart"
           data={graphData}
@@ -445,10 +400,10 @@ const Slide18 = ({ pptx, data, title }) => {
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
         />
-      </div>
+      {/* </div> */}
 
-      <Table181 id="table181" data={table1} />
-      <Table182 id="table182" data={table2} />
+      <Table1 tableid={tableid} data={table1} />
+      <Table2 tableid={tableid} data={table2} />
     </div>
   );
 };

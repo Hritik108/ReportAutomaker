@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
 
-const Table1 = ({ data }) => {
+const Table1 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -16,7 +16,7 @@ const Table1 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="Slide20table1"
+      id={tableid+"table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -39,7 +39,7 @@ const Table1 = ({ data }) => {
   );
 };
 
-const Table2 = ({ data }) => {
+const Table2 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -53,7 +53,7 @@ const Table2 = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="Slide20table2"
+      id={tableid+"table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -76,30 +76,33 @@ const Table2 = ({ data }) => {
   );
 };
 
-const Slide20 = ({ pptx }) => {
-  console.log("10 Slide20");
+const Slide20 = ({ pptx,data,tableid }) => {
+  // console.log("10 Slide20");
   const countRef = useRef(0);
   const [chartImageURI, setChartImageURI] = useState("");
-  const chartRef = useRef(null);
 
-  const table1 = [
-    ["Total orders", 0],
-    ["ORS", 0],
-    ["ORS %", 0],
-  ];
+const graphData= data.graph
+const table1 = data.table1
+const table2 = data.table2
 
-  const table2 = [
-    ["Reasons", "%"],
-    ["bad_order", 0],
-    ["total_food", 0],
-    ["quality_issue", 0],
-    ["quantity_issue", 0],
-    ["packaging", 0],
-    ["wrong_item", 0],
-    ["special_inst", 0],
-    ["missing_item", 0],
-    ["Total", 100],
-  ];
+  // const table1 = [
+  //   ["Total orders", 0],
+  //   ["ORS", 0],
+  //   ["ORS %", 0],
+  // ];
+
+  // const table2 = [
+  //   ["Reasons", "%"],
+  //   ["bad_order", 0],
+  //   ["total_food", 0],
+  //   ["quality_issue", 0],
+  //   ["quantity_issue", 0],
+  //   ["packaging", 0],
+  //   ["wrong_item", 0],
+  //   ["special_inst", 0],
+  //   ["missing_item", 0],
+  //   ["Total", 100],
+  // ];
 
   const options = {
     title: "",
@@ -128,127 +131,127 @@ const Slide20 = ({ pptx }) => {
     },
   };
 
-  const graphData = [
-    [
-      "sub zone",
-      "Total Food Issue",
-      { role: "annotation" },
-      "Quality issue",
-      { role: "annotation" },
-      "Quantity issue",
-      { role: "annotation" },
-      "packaging",
-      { role: "annotation" },
-      "wrong item",
-      { role: "annotation" }, // Annotations for each data point
-      "special inst issue",
-      { role: "annotation" },
-      "missing item",
-      { role: "annotation" },
-    ],
-    [
-      "Malad west",
-      165,
-      165,
-      938,
-      938,
-      522,
-      522,
-      998,
-      998,
-      450,
-      450,
-      165,
-      165,
-      938,
-      938,
-    ],
-    [
-      "dadar",
-      165,
-      165,
-      938,
-      938,
-      522,
-      522,
-      998,
-      998,
-      450,
-      450,
-      165,
-      165,
-      938,
-      938,
-    ],
-    [
-      "navi mumbai",
-      135,
-      135,
-      1120,
-      1120,
-      599,
-      599,
-      1268,
-      1268,
-      288,
-      288,
-      165,
-      165,
-      938,
-      938,
-    ],
-    [
-      "bkc",
-      157,
-      157,
-      1167,
-      1167,
-      587,
-      587,
-      807,
-      807,
-      397,
-      397,
-      165,
-      165,
-      938,
-      938,
-    ],
-    [
-      "2007/08",
-      139,
-      139,
-      1110,
-      1110,
-      615,
-      615,
-      968,
-      968,
-      215,
-      215,
-      165,
-      165,
-      938,
-      938,
-    ],
-    [
-      "2008/09",
-      136,
-      136,
-      691,
-      691,
-      629,
-      629,
-      1026,
-      1026,
-      366,
-      366,
-      165,
-      165,
-      938,
-      938,
-    ],
-  ];
+  // const graphData = [
+  //   [
+  //     "sub zone",
+  //     "Total Food Issue",
+  //     { role: "annotation" },
+  //     "Quality issue",
+  //     { role: "annotation" },
+  //     "Quantity issue",
+  //     { role: "annotation" },
+  //     "packaging",
+  //     { role: "annotation" },
+  //     "wrong item",
+  //     { role: "annotation" }, // Annotations for each data point
+  //     "special inst issue",
+  //     { role: "annotation" },
+  //     "missing item",
+  //     { role: "annotation" },
+  //   ],
+  //   [
+  //     "Malad west",
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //     522,
+  //     522,
+  //     998,
+  //     998,
+  //     450,
+  //     450,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  //   [
+  //     "dadar",
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //     522,
+  //     522,
+  //     998,
+  //     998,
+  //     450,
+  //     450,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  //   [
+  //     "navi mumbai",
+  //     135,
+  //     135,
+  //     1120,
+  //     1120,
+  //     599,
+  //     599,
+  //     1268,
+  //     1268,
+  //     288,
+  //     288,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  //   [
+  //     "bkc",
+  //     157,
+  //     157,
+  //     1167,
+  //     1167,
+  //     587,
+  //     587,
+  //     807,
+  //     807,
+  //     397,
+  //     397,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  //   [
+  //     "2007/08",
+  //     139,
+  //     139,
+  //     1110,
+  //     1110,
+  //     615,
+  //     615,
+  //     968,
+  //     968,
+  //     215,
+  //     215,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  //   [
+  //     "2008/09",
+  //     136,
+  //     136,
+  //     691,
+  //     691,
+  //     629,
+  //     629,
+  //     1026,
+  //     1026,
+  //     366,
+  //     366,
+  //     165,
+  //     165,
+  //     938,
+  //     938,
+  //   ],
+  // ];
 
   const convertTableToSvg = (tableElement, height) => {
     let cellWidth = 75;
@@ -389,10 +392,10 @@ const Slide20 = ({ pptx }) => {
           const svgData = new XMLSerializer().serializeToString(svg);
           const utf8Data = unescape(encodeURIComponent(svgData));
           const base64Image = btoa(utf8Data);
-          console.log(svg);
+          // console.log(svg);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-          console.log(imageuri);
+          // console.log(imageuri);
 
           await convertSvgToPng(imageuri)
             .then((pngDataUri) => {
@@ -406,7 +409,7 @@ const Slide20 = ({ pptx }) => {
                 h: 4.2,
               });
 
-              slide.addText("Negative Reviews Swiggy...", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -425,12 +428,12 @@ const Slide20 = ({ pptx }) => {
             });
 
           //mom table
-          const table1Element = document.getElementById("Slide20table1");
+          const table1Element = document.getElementById(tableid+"table1");
           console.log(table1Element);
           const table1svgDataUri = convertTableToSvg(table1Element, 10);
           await convertSvgToPng(table1svgDataUri)
             .then((pngDataUri) => {
-              console.log(pngDataUri);
+              // console.log(pngDataUri);
               const table1ImageOptions = {
                 data: pngDataUri,
                 x: 6.5,
@@ -448,12 +451,12 @@ const Slide20 = ({ pptx }) => {
             });
           console.log("hello");
           //mom2 table
-          const table2Element = document.getElementById("Slide20table2");
+          const table2Element = document.getElementById(tableid+"table2");
           const table2svgDataUri = convertTableToSvg(table2Element, 10);
 
           await convertSvgToPng(table2svgDataUri)
             .then((pngDataUri) => {
-              console.log(pngDataUri);
+              // console.log(pngDataUri);
               const table2ImageOptions = {
                 data: pngDataUri,
                 x: 6.5,
@@ -462,7 +465,7 @@ const Slide20 = ({ pptx }) => {
                 h: 3.1,
               };
 
-              console.log(table2ImageOptions);
+              // console.log(table2ImageOptions);
               slide.addText(
                 "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
                 {
@@ -489,14 +492,10 @@ const Slide20 = ({ pptx }) => {
     }
   }, [chartImageURI]);
 
-  const generateppt = async () => {
-    console.log("hello");
-    setChartImageURI(chartRef.current?.chart);
-  };
 
   return (
     <div>
-      <h2>Welcome to React{++countRef.current}</h2>
+      <h2>{data.title}</h2>
       <div id="googlegraphs18">
         <Chart
           chartType="ComboChart"
@@ -515,8 +514,8 @@ const Slide20 = ({ pptx }) => {
         />
       </div>
 
-      <Table1 data={table1} />
-      <Table2 data={table2} />
+      <Table1 tableid={tableid}  data={table1} />
+      <Table2 tableid={tableid} data={table2} />
     </div>
   );
 };

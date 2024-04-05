@@ -2786,6 +2786,36 @@ function App() {
         arraySlides.push( <Slide4 tableid="slide_6" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
 
       }
+      else if(prop == "slide_7"){
+        console.log(allData[prop])
+        arraySlides.push( <Slide4 tableid="slide_7" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
+
+      }
+      else if(prop == "slide_8"){
+        console.log(allData[prop])
+        arraySlides.push( <Slide2 tableid="slide_8" pptx={pptx} data={allData[prop]} title="Slide 4" />,)
+
+      }
+      else if(prop ==  "slide_18"){
+        console.log(allData[prop])
+        arraySlides.push( <Slide18 tableid="slide_18" pptx={pptx} data={allData[prop]} />,)
+      }
+      else if(prop ==  "slide_19"){
+        console.log(allData[prop])
+        arraySlides.push( <Slide20 tableid="slide_19" pptx={pptx} data={allData[prop]} />,)
+      }
+      else if(prop ==  "slide_20"){
+        console.log(allData[prop])
+        arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_20" pptx={pptx} data={allData[prop]} />,)
+      }
+      else if(prop ==  "slide_21"){
+        console.log(allData[prop])
+        arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_21" pptx={pptx} data={allData[prop]} />,)
+      }
+      else if(prop ==  "slide_22"){
+        console.log(allData[prop])
+        arraySlides.push( <Slide4 tableid="slide_21" pptx={pptx} data={allData[prop]} />,)
+      }
     }
   }
 
