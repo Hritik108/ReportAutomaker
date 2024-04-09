@@ -168,17 +168,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
     colors: ["rgb(119, 217, 112)", "rgb(255, 152, 0)", "rgb(250, 112, 112)"], // Specify the colors for each category
   };
   
-//   const table = data.table;
 
-  // const mom = [
-  //   ["Revenue", "-100%"],
-  //   ["Orders", "-100%"],
-  // ];
-
-  // const mom2 = [
-  //   ["Revenue", "-100%"],
-  //   ["Orders", "-100%"],
-  // ];
 
   const convertTableToSvg = (tableElement) => {
     const cellWidth = 65;
@@ -253,13 +243,6 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
     return dataUri;
   };
 
-  useEffect(() => {
- 
-
-    // setOptions(options);
-
-    // setChartEvents(chart_events);
-  }, []);
   const convertSvgToPng = (svgDataUri) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
@@ -284,12 +267,18 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
   };
 
 
+  // Declare pptx using useRef to avoid reinitialization
+  const pptxRef = useRef(null);
+  useEffect(() => {
+  pptxRef.current = pptx.addSlide();
+}, [])
+
 
   useEffect(() => {
    
 
     if(chartImageURI2 != ""){
-    const slide = pptx.addSlide();
+    const slide = pptxRef.current;
     slide.background = { fill: "000000" };
 
     const node = document.createElement("div");

@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import ReactDOM from "react-dom";
 import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
-import { type } from "@testing-library/user-event/dist/type";
-import { render } from "@testing-library/react";
 
-const DataTable = ({ data }) => {
+const Table1 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -19,7 +16,7 @@ const DataTable = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="slide24table"
+      id={tableid+"table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -42,7 +39,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const MomTable = ({ data }) => {
+const Table2 = ({ data,tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -56,7 +53,7 @@ const MomTable = ({ data }) => {
         color: "white",
         width: "20%",
       }}
-      id="momtable"
+      id={tableid+"table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -79,83 +76,74 @@ const MomTable = ({ data }) => {
   );
 };
 
-const Mom2Table = ({ data }) => {
-  const cellWidth = 120;
-  const cellHeight = 10;
-  const borderWidth = 1;
-  const fontSize = 12;
-
-  return (
-    <table
-      style={{
-        borderCollapse: "collapse",
-        background: "black",
-        color: "white",
-        width: "20%",
-      }}
-      id="mom2table"
-    >
-      <thead>
-        <tr>
-          <th
-            colSpan={data[0].length}
-            style={{ borderBottom: "1px solid white" }}
-          >
-            MOM Values
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <td
-                key={cellIndex}
-                style={{
-                  border: "1px solid white",
-                  padding: "8px",
-                }}
-              >
-                {cell}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const Slide24 = ({ pptx, data, title }) => {
+const Slide18 = ({ tableid,pptx, data, title }) => {
   const [chartImageURI, setChartImageURI] = useState("");
-  // const graphData = data.graph.graphdata;
-  console.log("8 Slide24");
+  const table1 = data.table1
+  const table2 = data.table2
   const graphData = data.graph;
-  const table = data.table;
 
-  // const table = [
-  //   ["Month", "Menu Opens", "M2C", "M2O", "C2O"],
-  //   ["Sep-2023", 63343, 29.6, 16.5, 55.8],
-  //   ["Oct-2023", 79590, 32.1, 18.1, 56.3],
-  //   ["Nov-2023", 0, 0, 0, 0],
-  //   ["Dec-2023", 0, 0, 0, 0],
-  //   ["Jan-2024", 0, 0, 0, 0],
-  //   ["Feb-2024", 0, 0, 0, 0],
+  const options = {
+    title: "",
+    vAxis: { title: "" },
+    hAxis: { title: "Month" },
+    seriesType: "bars",
+    // series: {
+    //   0: { tooltip: false },
+    //   1: { tooltip: false },
+    //   2: { tooltip: false },
+    //   3: { tooltip: false },
+    //   4: { tooltip: false },
+    //   5: { tooltip: false },
+    // },
+    'tooltip' : {
+      trigger: 'none'
+    },
+    legend: { position: "top", maxLines: 5 }, // Move legend to the top
+    annotations: {
+      textStyle: {
+        fontSize: 12,
+        color: "#000000", // Annotation text color
+      },
+    },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      // height: "90%",
+    },
+  };
+
+  // const graphData = [
+  //   [
+  //     "sub zone",
+  //     "Total Food Issue",
+  //     { role: "annotation" },
+  //     "Quality issue",
+  //     { role: "annotation" },
+  //     "Quantity issue",
+  //     { role: "annotation" },
+  //     "packaging",
+  //     { role: "annotation" },
+  //     "wrong item",
+  //     { role: "annotation" }, // Annotations for each data point
+  //     "special inst issue",
+  //     { role: "annotation" },
+  //     "wrong item",
+  //     { role: "Bad order" },
+  //   ],
+  //   ["Malad west", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
+  //   ["dadar", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
+  //   ["navi mumbai", 135, 135, 1120, 1120, 599, 599, 1268, 1268, 288, 288, 165, 165, 938, 938,],
+  //   ["bkc", 157, 157, 1167, 1167, 587, 587, 807, 807, 397, 397, 165, 165, 938, 938,],
+  //   ["2007/08", 139, 139, 1110, 1110, 615, 615, 968, 968, 215, 215, 165, 165, 938, 938,],
+  //   ["2008/09", 136, 136, 691, 691, 629, 629, 1026, 1026, 366, 366, 165, 165, 938, 938,],
   // ];
 
-  const mom = [
-    ["Revenue", "-100%"],
-    ["Orders", "-100%"],
-  ];
-
-  const mom2 = [
-    ["Revenue", "-100%"],
-    ["Orders", "-100%"],
-  ];
-
-  const convertTableToSvg = (tableElement) => {
-    const cellWidth = 65;
-    const cellHeight = 30;
+  const convertTableToSvg = (tableElement, height) => {
+    let cellWidth = 75;
+    const cellHeight = height;
     const borderWidth = 1;
     const fontSize = 9;
 
@@ -181,7 +169,13 @@ const Slide24 = ({ pptx, data, title }) => {
           "http://www.w3.org/2000/svg",
           "rect"
         );
-        rect.setAttribute("x", j * cellWidth);
+        if (j == 0) {
+          cellWidth = 120;
+          rect.setAttribute("x", j * cellWidth);
+        } else {
+          cellWidth = 50;
+          rect.setAttribute("x", (j - 1) * cellWidth + 100);
+        }
         rect.setAttribute("y", i * cellHeight);
         rect.setAttribute("width", cellWidth);
         rect.setAttribute("height", cellHeight);
@@ -198,17 +192,25 @@ const Slide24 = ({ pptx, data, title }) => {
         rect.setAttribute("stroke-width", borderWidth);
         svg.appendChild(rect);
 
+        // Get cell content
+        // const cellContent = tableElement.rows[i].cells[j].textContent;
+
         // Create text element for cell content
         const text = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "text"
         );
-        text.setAttribute("x", j * cellWidth + cellWidth / 2);
+        // text.setAttribute("x", j * cellWidth + 5);
+        if (j == 0) {
+          text.setAttribute("x", j * cellWidth + 2);
+        } else {
+          text.setAttribute("x", (j - 1) * cellWidth + 120 + 2);
+        }
         text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
         text.setAttribute("fill", "white");
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
-        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("text-anchor", "start");
         text.textContent = cellContent;
         svg.appendChild(text);
       }
@@ -224,36 +226,6 @@ const Slide24 = ({ pptx, data, title }) => {
     const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
 
     return dataUri;
-  };
-
-  const options = {
-    series: {
-      0: { targetAxisIndex: 0, type: "bars" },
-      1: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
-      2: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
-      3: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
-    },
-    'tooltip' : {
-      trigger: 'none'
-    },
-    vAxes: {
-      // 0: {
-      //   gridlines: { color: "transparent" },
-      //   viewWindow: { min: 0 },
-      // },
-      1: {
-        gridlines: { color: "transparent" },
-        viewWindow: { min: 0 },
-      },
-    },
-    legend: { position: "top" },
-    annotations: {
-      alwaysOutside: true,
-      textStyle: {
-        fontSize: 14,
-        bold: true,
-      },
-    },
   };
 
   const convertSvgToPng = (svgDataUri) => {
@@ -273,44 +245,58 @@ const Slide24 = ({ pptx, data, title }) => {
         resolve(pngDataUri);
       };
       image.onerror = (error) => {
+        console.log(error);
         reject(error);
       };
       image.src = svgDataUri;
     });
   };
 
+  // useEffect(() => {
+  //   console.log("data:");
+  //   console.log(data);
+  // }, [data]);
+
   useEffect(() => {
     if (chartImageURI !== "") {
+      // console.log(chartImageURI);
+      // console.log("hello");
+      // console.log(chartImageURI);
+      // const pptx = new pptxgen();
       const slide = pptx.addSlide();
       slide.background = { fill: "000000" };
-
       const node = document.createElement("div");
       node.innerHTML = chartImageURI;
-
+      // console.log(chartImageURI);
+      // console.log(node.innerHTML);
       const parser = new DOMParser();
       const doc = parser.parseFromString(chartImageURI, "text/html");
       const svgs = doc.querySelectorAll("svg");
 
       const images = [];
-
+      // console.log(svgs);
       svgs.forEach(async (svg, index) => {
         try {
           const svgData = new XMLSerializer().serializeToString(svg);
-          const base64Image = btoa(svgData);
+          const utf8Data = unescape(encodeURIComponent(svgData));
+          const base64Image = btoa(utf8Data);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
+          // console.log(imageuri);
 
           await convertSvgToPng(imageuri)
             .then((pngDataUri) => {
+              // console.log(pngDataUri);
+
               slide.addImage({
                 data: pngDataUri,
-                x: 0.6,
+                x: 0.3,
                 y: 1,
-                w: 5,
-                h: 3,
+                w: 6,
+                h: 4.2,
               });
 
-              slide.addText("Overall Funnel - month on month", {
+              slide.addText(data.title, {
                 y: -0.5,
                 x: 0.6,
                 w: 10,
@@ -321,6 +307,52 @@ const Slide24 = ({ pptx, data, title }) => {
                 bold: true,
               });
 
+              //  pptx.writeFile("output.pptx");
+            })
+
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
+
+          //mom table
+          const table1Element = document.getElementById(tableid+"table1");
+          // console.log(table1Element);
+          const table1svgDataUri = convertTableToSvg(table1Element, 15);
+          await convertSvgToPng(table1svgDataUri)
+            .then((pngDataUri) => {
+              // console.log(pngDataUri);
+              const table1ImageOptions = {
+                data: pngDataUri,
+                x: 6.7,
+                y: 0.5,
+                w: 3,
+                h: 0.75,
+              };
+
+              // console.log(table1ImageOptions);
+
+              slide.addImage(table1ImageOptions);
+            })
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
+          // console.log("hello");
+          //mom2 table
+          const table2Element = document.getElementById(tableid+"table2");
+          const table2svgDataUri = convertTableToSvg(table2Element, 12);
+
+          await convertSvgToPng(table2svgDataUri)
+            .then((pngDataUri) => {
+              // console.log(pngDataUri);
+              const table2ImageOptions = {
+                data: pngDataUri,
+                x: 6.7,
+                y: 1.3,
+                w: 3,
+                h: 4,
+              };
+
+              // console.log(table2ImageOptions);
               slide.addText(
                 "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
                 {
@@ -333,107 +365,31 @@ const Slide24 = ({ pptx, data, title }) => {
                   fontSize: 8,
                 }
               );
-              //  pptx.writeFile("output.pptx");
+              slide.addImage(table2ImageOptions);
+              // pptx.writeFile("output.pptx");
+              // console.log("slide2 rendered");
             })
-
-            .catch((error) => {});
-
-          //main table
-          const tableElement = document.getElementById("slide24table");
-          const svgDataUri = convertTableToSvg(tableElement);
-
-          await convertSvgToPng(svgDataUri)
-            .then((pngDataUri) => {
-              slide.addImage({
-                data: pngDataUri,
-                x: 5.9,
-                y: 1,
-                w: 3.5,
-                h: 3,
-              });
-            })
-            .catch((error) => {});
-
-          //mom table
-          // const momtableElement = document.getElementById("momtable");
-
-          // const momsvgDataUri = convertTableToSvg(momtableElement);
-          // await convertSvgToPng(momsvgDataUri)
-          //   .then((pngDataUri) => {
-          //     const momImageOptions = {
-          //       data: pngDataUri,
-          //       x: 0.6,
-          //       y: 4.5,
-          //       w: 1.5,
-          //       h: 0.7,
-          //     };
-
-          //     slide.addImage(momImageOptions);
-          //     slide.addText("MOM", {
-          //       y: 4,
-          //       x: 1,
-          //       w: 0.75,
-          //       h: 0.75,
-          //       color: "FFFFFF",
-          //       fontFace: "Calibri",
-          //       fontSize: 15,
-          //       bold: true,
-          //     });
-          //     // pptx.writeFile("output.pptx");
-          //   })
-          //   .catch((error) => {
-          //     console.error("Error converting SVG to PNG:", error);
-          //   });
-
-          //mom2 table
-          // const mom2tableElement = document.getElementById("momtable");
-
-          // const mom2svgDataUri = convertTableToSvg(mom2tableElement);
-          // await convertSvgToPng(mom2svgDataUri)
-          //   .then((pngDataUri) => {
-          //     const momImageOptions = {
-          //       data: pngDataUri,
-          //       x: 3,
-          //       y: 4.5,
-          //       w: 1.7,
-          //       h: 0.7,
-          //     };
-          //     slide.addText("MO2M", {
-          //       y: 4,
-          //       x: 3.45,
-          //       w: 1,
-          //       h: 0.75,
-          //       color: "FFFFFF",
-          //       fontFace: "Calibri",
-          //       fontSize: 15,
-          //       bold: true,
-          //     });
-          //     slide.addImage(momImageOptions);
-          //     console.log("slide24 rendered")
-          //   })
-          //   .catch((error) => {
-          //     console.error("Error converting SVG to PNG:", error);
-          //   });
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
+            });
         } catch (error) {
           console.error("Error converting SVG to image:", error);
         }
       });
-     
     }
   }, [chartImageURI]);
 
- 
 
 
   return (
-    <>
-      <h1>{title}</h1>
-      <div id="googlegraphs">
+    <div>
+      <h2>{data.title}</h2>
+      {/* <div id="googlegraphs18"> */}
         <Chart
-          chartType="ScatterChart"
+          chartType="ComboChart"
           data={graphData}
           options={options}
-          // graph_id="ScatterChart1"
+          graph_id="ScatterChart18"
           width="70%"
           height={"400px"}
           legend_toggle={true}
@@ -443,14 +399,13 @@ const Slide24 = ({ pptx, data, title }) => {
               setChartImageURI(rcatChart.visualization.container.innerHTML);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
-          // ref={chartRef}
         />
-      </div>
-      <DataTable data={table} />
-      {/* <MomTable id="momtable" data={mom} />
-      <Mom2Table id="mom2table" data={mom2} /> */}
-    </>
+      {/* </div> */}
+
+      <Table1 tableid={tableid} data={table1} />
+      <Table2 tableid={tableid} data={table2} />
+    </div>
   );
 };
 
-export default Slide24;
+export default Slide18;

@@ -109,7 +109,7 @@ const table2 = data.table2
     vAxis: { title: "" },
     hAxis: { title: "" },
     seriesType: "bars",
-    series: { 5: { type: "line" } },
+    // series: { 5: { type: "line" } },
     // legend: { position: "top" }, // Move legend to the top
     annotations: {
       textStyle: {
@@ -368,13 +368,19 @@ const table2 = data.table2
   //   console.log(data);
   // }, [data]);
 
+         // Declare pptx using useRef to avoid reinitialization
+         const pptxRef = useRef(null);
+         useEffect(() => {
+          pptxRef.current = pptx.addSlide();
+        }, [])
+
   useEffect(() => {
     if (chartImageURI !== "") {
       // console.log(chartImageURI);
       // console.log("hello");
       // console.log(chartImageURI);
       // const pptx = new pptxgen();
-      const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
       // setChartImageURI(chartRef.current?.chart);
       const node = document.createElement("div");

@@ -149,47 +149,9 @@ const numberTrimmer = (value, index) => {
 
 const Slide4 = ({ pptx, data, tableid }) => {
   const [chartImageURI, setChartImageURI] = useState("");
-
-  // const graphData = data.graph.graphdata;
-
-  // const graphData = [ [
-  //   "",
-  //   "Net Revenue",
-  //   { role: "annotation" },
-  //   "Orders",
-  //   { role: "annotation" },
-  // ],["July-2023", 7205, 7205, 1616197.0, 1616197.0], ["August-2023", 10466, 10466, 2313880.740234375, 2313880.740234375], ["September-2023", 10397, 10397, 2409313.0, 2409313.0], ["October-2023", 10226, 10226, 2404472.0, 2404472.0], ["November-2023", 7184, 7184, 1805468.0, 1805468.0], ["December-2023", 15438, 15438, 3767566.0, 3767566.0]]
-
-  // const graphData = [["", "Net Revenue", {"role": "annotation"}, "Orders", {"role": "annotation"}], ["July-2023", 7205, 7205, 1616197.0, 1616197.0], ["August-2023", 10466, 10466, 2313880.740234375, 2313880.740234375], ["September-2023", 10397, 10397, 2409313.0, 2409313.0], ["October-2023", 10226, 10226, 2404472.0, 2404472.0], ["November-2023", 7184, 7184, 1805468.0, 1805468.0], ["December-2023", 15438, 15438, 3767566.0, 3767566.0]]
   const table = data.table;
-
-  // console.log(data.graph);
   const graphData = data.graph;
-  let newGraphData = [];
-  for (let i = 0; i < data.graph.length; i++) {
-    let temp = [];
-    for (let j = 0; j < data.graph[0].length; j++) {
-      if (!isNaN(graphData[i][j])) {
-        temp.push(numberTrimmer(graphData[i][j]));
-      } else {
-        temp.push(graphData[i][j]);
-      }
-    }
-    newGraphData.push(temp);
-  }
 
-  // console.log(newGraphData);
-
-  // console.log(data.mom)
-  // const mom = [
-  //   ["Revenue", "-100%"],
-  //   ["Orders", "-100%"],
-  // ];
-
-  // const mom2 = [
-  //   ["Revenue", "-100%"],
-  //   ["Orders", "-100%"],
-  // ];
   let mom = [];
   let mo2m = [];
 
@@ -198,7 +160,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
     mo2m = data.mo2m;
   }
 
-  const convertTableToSvg = (tableElement) => {
+  const convertTableToSvg = (tableElement, isMOMMO2MPresent = false) => {
     const cellWidth = 65;
     const cellHeight = 30;
     const borderWidth = 1;
@@ -236,6 +198,10 @@ const Slide4 = ({ pptx, data, tableid }) => {
           rect.setAttribute("fill", "red");
         } else if (cellContent.includes("Swiggy")) {
           rect.setAttribute("fill", "orange");
+        } else if (tableid == "slide_6" && i == 0 && numCols > 2) {
+          rect.setAttribute("fill", "red");
+        } else if (tableid == "slide_7" && i == 0 && numCols > 2) {
+          rect.setAttribute("fill", "orange");
         } else {
           rect.setAttribute("fill", "black");
         }
@@ -250,11 +216,27 @@ const Slide4 = ({ pptx, data, tableid }) => {
         );
         text.setAttribute("x", j * cellWidth + cellWidth / 2);
         text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
-        text.setAttribute("fill", "white");
+
+        if (isMOMMO2MPresent && j == 1) {
+          if (cellContent > 0) {
+            text.setAttribute("fill", "green");
+            text.textContent = cellContent + "%";
+          } else if (cellContent < 0) {
+            text.setAttribute("fill", "red");
+            text.textContent = cellContent;
+          } else {
+            text.setAttribute("fill", "white");
+            text.textContent = cellContent + "%";
+          }
+        } else {
+          text.setAttribute("fill", "white");
+          text.textContent = cellContent;
+        }
+
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
-        text.textContent = cellContent;
+
         svg.appendChild(text);
       }
     }
@@ -286,11 +268,19 @@ const Slide4 = ({ pptx, data, tableid }) => {
         lineWidth: 2,
         tooltip: false,
       },
+      2: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
+      3: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
     },
     vAxes: {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "short",
+      },
+      1: {
+        // gridlines: { color: "transparent" },
+        viewWindow: { min: 0 },
+        format: "short",
       },
     },
     legend: { position: "top" },
@@ -333,10 +323,16 @@ const Slide4 = ({ pptx, data, tableid }) => {
       image.src = svgDataUri;
     });
   };
+  // Declare pptx using useRef to avoid reinitialization
+  const pptxRef = useRef(null);
+  useEffect(() => {
+    pptxRef.current = pptx.addSlide();
+  }, []);
 
   useEffect(() => {
     if (chartImageURI !== "") {
-      const slide = pptx.addSlide();
+      // const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
 
       const node = document.createElement("div");
@@ -420,7 +416,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
               tableid + "momtable"
             );
             // console.log(momtableElement);
-            const momsvgDataUri = convertTableToSvg(momtableElement);
+            const momsvgDataUri = convertTableToSvg(momtableElement, true);
             await convertSvgToPng(momsvgDataUri)
               .then((pngDataUri) => {
                 const momImageOptions = {
@@ -455,7 +451,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
               tableid + "mo2mtable"
             );
             // console.log(mom2tableElement);
-            const mom2svgDataUri = convertTableToSvg(mom2tableElement);
+            const mom2svgDataUri = convertTableToSvg(mom2tableElement, true);
             await convertSvgToPng(mom2svgDataUri)
               .then((pngDataUri) => {
                 const momImageOptions = {
@@ -492,9 +488,10 @@ const Slide4 = ({ pptx, data, tableid }) => {
 
   return (
     <>
-      <h1>{data.title}</h1>
+      <h1>{data.title} hhe</h1>
       <div id="googlegraphs">
         <Chart
+          chartLanguage={"hi"}
           chartType="ScatterChart"
           data={graphData}
           options={options}
@@ -505,9 +502,18 @@ const Slide4 = ({ pptx, data, tableid }) => {
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
+              let modifiedHtmlContent =
+                rcatChart.visualization.container.innerHTML.replace(
+                  /लाख/g,
+                  "L"
+                );
+              modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+              modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+              // console.log(modifiedHtmlContent);
+              setChartImageURI(modifiedHtmlContent);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
+          // chartLanguage={"hi"}
           // ref={chartRef}
         />
       </div>

@@ -191,6 +191,11 @@ const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
 
     return dataUri;
   };
+     // Declare pptx using useRef to avoid reinitialization
+     const pptxRef = useRef(null);
+     useEffect(() => {
+      pptxRef.current = pptx.addSlide();
+    }, [])
 
   useEffect(() => {
     // const node = document.createElement("div");
@@ -201,7 +206,8 @@ const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
       const parser = new DOMParser();
 
       try {
-        const slide = pptx.addSlide();
+        // const slide = pptx.addSlide();
+        const slide = pptxRef.current;
         slide.background = { fill: "000000" };
         //main table
         console.log(tableid+i+"table")

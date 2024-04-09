@@ -33,10 +33,16 @@ const SlideX = ({ pptx, data}) => {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "short"
       },
       1: {
-        gridlines: { color: "transparent" },
-        viewWindow: { min: 0 },
+        format: "short",
+      },
+      2: {
+        format: "short",
+      },
+      3: {
+        format: "short",
       },
     },
     legend: { position: "top" },
@@ -80,9 +86,17 @@ const SlideX = ({ pptx, data}) => {
     });
   };
 
+
+// Declare pptx using useRef to avoid reinitialization
+const pptxRef = useRef(null);
+useEffect(() => {
+pptxRef.current = pptx.addSlide();
+}, [])
+
+
   useEffect(() => {
     if (chartImageURI1 != "" && chartImageURI2 != "") {
-      const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
 
       const node = document.createElement("div");
@@ -189,7 +203,14 @@ const SlideX = ({ pptx, data}) => {
         chartPackage={["controls"]}
         getChartWrapper={(rcatChart) => {
           setTimeout(() => {
-            setChartImageURI1(rcatChart.visualization.container.innerHTML);
+            let modifiedHtmlContent =
+                rcatChart.visualization.container.innerHTML.replace(
+                  /लाख/g,
+                  "L"
+                );
+              modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+              modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+              setChartImageURI1(modifiedHtmlContent);
           }, 5000); // Wait for 5000 milliseconds (5 seconds)
         }}
       />
@@ -204,7 +225,15 @@ const SlideX = ({ pptx, data}) => {
         chartPackage={["controls"]}
         getChartWrapper={(rcatChart) => {
           setTimeout(() => {
-            setChartImageURI2(rcatChart.visualization.container.innerHTML);
+            let modifiedHtmlContent =
+                rcatChart.visualization.container.innerHTML.replace(
+                  /लाख/g,
+                  "L"
+                );
+              modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+              modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+              setChartImageURI2(modifiedHtmlContent);
+            // setChartImageURI2(rcatChart.visualization.container.innerHTML);
           }, 5000); // Wait for 5000 milliseconds (5 seconds)
         }}
       />

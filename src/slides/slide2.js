@@ -170,6 +170,16 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "short",
+      },
+      1: {
+        format: "short",
+      },
+      2: {
+        format: "short",
+      },
+      3: {
+        format: "short",
       },
     },
     legend: { position: "top" },
@@ -292,13 +302,20 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
     });
   };
 
+     // Declare pptx using useRef to avoid reinitialization
+     const pptxRef = useRef(null);
+     useEffect(() => {
+      pptxRef.current = pptx.addSlide();
+    }, [])
+
   useEffect(() => {
     // console.log(chartImageURI);
     if (chartImageURI !== "") {
       // console.log("hello");
       // console.log(chartImageURI);
       // const pptx = new pptxgen();
-      const slide = pptx.addSlide();
+      // const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
       // setChartImageURI(chartRef.current?.chart);
       const node = document.createElement("div");
@@ -433,9 +450,17 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
           height={"470px"}
           legend_toggle={true}
           chartPackage={["controls"]}
+          chartLanguage={"hi"}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
+              let modifiedHtmlContent =
+                rcatChart.visualization.container.innerHTML.replace(
+                  /लाख/g,
+                  "L"
+                );
+              modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+              modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+              setChartImageURI(modifiedHtmlContent);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
           onload={() => console.log("char hello")}
@@ -444,9 +469,6 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
 
       <Table1 tableid={tableid} data={table1} />
       <Table2 tableid={tableid} data={table2} />
-      <div>
-        <div dangerouslySetInnerHTML={{ __html: chartImageURI }} />
-      </div>
     </div>
   );
 };

@@ -103,6 +103,16 @@ const Slide27 = ({ pptx,tableid, data}) => {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "short"
+      },
+      1: {
+        format: "short",
+      },
+      2: {
+        format: "short",
+      },
+      3: {
+        format: "short",
       },
     },
     'tooltip' : {
@@ -160,13 +170,7 @@ const Slide27 = ({ pptx,tableid, data}) => {
         rect.setAttribute("height", cellHeight);
         // Check cell content for Zomato or Swiggy and set background color accordingly
         const cellContent = tableElement.rows[i].cells[j].textContent;
-        if (cellContent.includes("Zomato")) {
-          rect.setAttribute("fill", "red");
-        } else if (cellContent.includes("Swiggy")) {
-          rect.setAttribute("fill", "orange");
-        } else {
-          rect.setAttribute("fill", "black");
-        }
+        rect.setAttribute("fill", "black");
         rect.setAttribute("stroke", "white");
         rect.setAttribute("stroke-width", borderWidth);
         svg.appendChild(rect);
@@ -178,11 +182,30 @@ const Slide27 = ({ pptx,tableid, data}) => {
         );
         text.setAttribute("x", j * cellWidth + cellWidth / 2);
         text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
-        text.setAttribute("fill", "white");
+        // text.setAttribute("fill", "white");
+
+        if (j == 1) {
+          if (cellContent > 0) {
+            text.setAttribute("fill", "green");
+            text.textContent = cellContent+"%";
+          } else if (cellContent < 0) {
+            text.setAttribute("fill", "red");
+            text.textContent = cellContent;
+          } else {
+            text.setAttribute("fill", "white");
+            text.textContent = cellContent+"%";
+          }
+         
+        } else {
+          text.setAttribute("fill", "white");
+          text.textContent = cellContent;
+        }
+
+
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
-        text.textContent = cellContent;
+        // text.textContent = cellContent;
         svg.appendChild(text);
       }
     }
@@ -222,10 +245,17 @@ const Slide27 = ({ pptx,tableid, data}) => {
     });
   };
 
+// Declare pptx using useRef to avoid reinitialization
+const pptxRef = useRef(null);
+useEffect(() => {
+pptxRef.current = pptx.addSlide();
+}, [])
+
+
   useEffect(() => {
 
     if(chartImageURI !== ""){
-    const slide = pptx.addSlide();
+    const slide = pptxRef.current;
     slide.background = { fill: "000000" };
 
     const node = document.createElement("div");
@@ -295,7 +325,7 @@ const Slide27 = ({ pptx,tableid, data}) => {
               x: 8,
               y: 1.2,
               w: 1.75,
-              h: 0.85,
+              h: 1.275,
             };
 
             slide.addImage(momImageOptions);
@@ -329,6 +359,7 @@ const Slide27 = ({ pptx,tableid, data}) => {
     <><h1>{data.title}</h1>
       <div id="googlegraphs">
         <Chart
+          chartLanguage={"hi"}
           chartType="ScatterChart"
           data={graphData}
           options={options}
@@ -338,7 +369,14 @@ const Slide27 = ({ pptx,tableid, data}) => {
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
+              let modifiedHtmlContent =
+              rcatChart.visualization.container.innerHTML.replace(
+                /लाख/g,
+                "L"
+              );
+            modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+            modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+            setChartImageURI(modifiedHtmlContent);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
           // ref={chartRef}

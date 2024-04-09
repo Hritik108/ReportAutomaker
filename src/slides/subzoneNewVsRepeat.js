@@ -8,24 +8,6 @@ import { render } from "@testing-library/react";
 const Slide32 = ({ pptx, data}) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
-  // console.log('14 Slide32')
-
-  // const graphData = [
-  //   [
-  //     "City",
-  //     "LA in %",
-  //     { role: "annotation" },
-  //     "MM in %",
-  //     { role: "annotation" },
-  //   ],
-  //   ["September-2023", 4000000, 3000000, 1000000, 4000000],
-  //   ["October-2023", 2000000, 1500000, 800000, 4000000],
-  //   ["November-2023", 1500000, 1000000, 600000, 4000000],
-  //   ["December-2023", 1200000, 800000, 400000, 4000000],
-  //   ["January-2024", 1000000, 700000, 300000, 4000000],
-  //   ["February-2024", 1500000, 1000000, 600000, 4000000],
-  // ];
-
   const graphData1 = data.graph1
   const graphData2 = data.graph2
 
@@ -53,6 +35,14 @@ const Slide32 = ({ pptx, data}) => {
         // auraColor: "none",
       },
     },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      height: "90%",
+    },
     colors: ["rgb(250, 112, 112)", "rgb(144, 210, 109)", "rgb(255, 201, 74)"],
   };
 
@@ -79,9 +69,15 @@ const Slide32 = ({ pptx, data}) => {
     });
   };
 
+// Declare pptx using useRef to avoid reinitialization
+const pptxRef = useRef(null);
+useEffect(() => {
+pptxRef.current = pptx.addSlide();
+}, [])
+
   useEffect(() => {
     if (chartImageURI1 != "" && chartImageURI2 != "") {
-      const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
 
       const node = document.createElement("div");
@@ -102,8 +98,15 @@ const Slide32 = ({ pptx, data}) => {
           // console.log("hellll");
           const svgData = new XMLSerializer().serializeToString(svg);
           const svgData2 = new XMLSerializer().serializeToString(svg2);
-          const base64Image = btoa(svgData);
-          const base64Image2 = btoa(svgData2);
+
+          const utf8Data = unescape(encodeURIComponent(svgData));
+          const base64Image = btoa(utf8Data);
+
+          const utf8Data2 = unescape(encodeURIComponent(svgData2));
+          const base64Image2 = btoa(utf8Data2);
+
+          
+          // const base64Image = btoa(utf8Data);
 
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
           const imageuri2 = `data:image/svg+xml;base64,${base64Image2}`;
@@ -165,6 +168,8 @@ const Slide32 = ({ pptx, data}) => {
           console.error("Error converting SVG to image:", error);
         }
       });
+
+      // pptx.writeFile("output.pptx");
     }
   }, [chartImageURI1, chartImageURI2]);
   // console.log("hello");

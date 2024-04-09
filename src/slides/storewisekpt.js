@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-const Table = ({ data }) => {
+const Table = ({ data ,tableid}) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -13,7 +13,7 @@ const Table = ({ data }) => {
         color: "white",
         width: "80%",
       }}
-      id="slide3table1"
+      id={tableid+"table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -37,7 +37,7 @@ const Table = ({ data }) => {
   );
 };
 
-const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
+const Slide4StoreWiseKTP = ({ pptx,data,title,tableid }) => {
   // const data = [
   //   [
   //     "Location",
@@ -180,6 +180,12 @@ const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
     return dataUri;
   };
 
+       // Declare pptx using useRef to avoid reinitialization
+       const pptxRef = useRef(null);
+       useEffect(() => {
+        pptxRef.current = pptx.addSlide();
+      }, [])
+
   useEffect(() => {
     // const node = document.createElement("div");
     // node.innerHTML = chartImageURI;
@@ -187,10 +193,10 @@ const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
     const parser = new DOMParser();
 
     try {
-      const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
       //main table
-      const tableElement = document.getElementById("slide3table1");
+      const tableElement = document.getElementById(tableid+"table1");
       const svgDataUri = convertTableToSvg(tableElement);
       const numRows = tableElement.rows.length;
       const NoOfPages = numRows / 6;
@@ -205,7 +211,7 @@ const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
             h: 4,
           });
 
-          slide.addText("Store Wise KPT", {
+          slide.addText(data.title, {
             y: -0.5,
             x: 0.6,
             w: 10,
@@ -238,7 +244,7 @@ const Slide4StoreWiseKTP = ({ pptx,data,title }) => {
     // });
   }, []);
 
-  return<><h1>{title}</h1> <Table data={tableData} /> </>;
+  return<><h1>{title}</h1> <Table tableid={tableid} data={tableData} /> </>;
 };
 
 export default Slide4StoreWiseKTP;

@@ -252,10 +252,12 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
     });
   };
 
-  // useEffect(() => {
-  //   console.log("data:");
-  //   console.log(data);
-  // }, [data]);
+       // Declare pptx using useRef to avoid reinitialization
+       const pptxRef = useRef(null);
+       useEffect(() => {
+        pptxRef.current = pptx.addSlide();
+      }, [])
+
 
   useEffect(() => {
     if (chartImageURI !== "") {
@@ -263,7 +265,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
       // console.log("hello");
       // console.log(chartImageURI);
       // const pptx = new pptxgen();
-      const slide = pptx.addSlide();
+      const slide = pptxRef.current;
       slide.background = { fill: "000000" };
       const node = document.createElement("div");
       node.innerHTML = chartImageURI;

@@ -42,7 +42,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const MomTable = ({ data,tableid }) => {
+const MomTable = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -56,7 +56,7 @@ const MomTable = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"momtable"}
+      id={tableid + "momtable"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -79,7 +79,7 @@ const MomTable = ({ data,tableid }) => {
   );
 };
 
-const Mo2mTable = ({ data,tableid }) => {
+const Mo2mTable = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -93,7 +93,7 @@ const Mo2mTable = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"mo2mtable"}
+      id={tableid + "mo2mtable"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -116,13 +116,11 @@ const Mo2mTable = ({ data,tableid }) => {
   );
 };
 
-const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
-
-
+const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
   const [chartImageURI, setChartImageURI] = useState("");
   const graphData = data.graph;
   const mom = data.mom;
-  const mom2 = data.mo2m
+  const mom2 = data.mo2m;
 
   const options = {
     series: {
@@ -133,6 +131,10 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
       0: {
         gridlines: { color: "transparent" },
         viewWindow: { min: 0 },
+        format: "short",
+      },
+      1: {
+        format: "short",
       },
     },
     legend: { position: "top" },
@@ -143,8 +145,8 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
         bold: true,
       },
     },
-    'tooltip' : {
-      trigger: 'none'
+    tooltip: {
+      trigger: "none",
     },
     chartArea: {
       left: 70,
@@ -208,11 +210,30 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
         );
         text.setAttribute("x", j * cellWidth + cellWidth / 2);
         text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
-        text.setAttribute("fill", "white");
+        // text.setAttribute("fill", "white");
         text.setAttribute("font-size", fontSize);
+
+        if (j == 1) {
+          if (cellContent > 0) {
+            text.setAttribute("fill", "green");
+            text.textContent = cellContent+"%";
+          } else if (cellContent < 0) {
+            text.setAttribute("fill", "red");
+            text.textContent = cellContent;
+          } else {
+            text.setAttribute("fill", "white");
+            text.textContent = cellContent+"%";
+          }
+         
+        } else {
+          text.setAttribute("fill", "white");
+          text.textContent = cellContent;
+        }
+
+
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
-        text.textContent = cellContent;
+        // text.textContent = cellContent;
         svg.appendChild(text);
       }
     }
@@ -252,176 +273,180 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
     });
   };
 
+  // Declare pptx using useRef to avoid reinitialization
+  const pptxRef = useRef(null);
   useEffect(() => {
+    pptxRef.current = pptx.addSlide();
+  }, []);
 
-    if(chartImageURI !== ""){
+  useEffect(() => {
+    if (chartImageURI !== "") {
+      // //subzone slide code
+      // const titleSlide = pptxRef.current;
+      // titleSlide.background = { fill: "000000" };
+      // //main table
 
-    //subzone slide code
+      // titleSlide.addText(subzonename, {
+      //     y: 2,
+      //     x: 0.6,
+      //     w: 10,
+      //     h: 2,
+      //     color: "FFFFFF",
+      //     fontFace: "Calibri",
+      //     fontSize: 60,
+      //     bold: true,
+      // });
 
-    const titleSlide = pptx.addSlide();
-    titleSlide.background = { fill: "000000" };
-    //main table
-
-    titleSlide.addText(subzonename, {
-        y: 2,
-        x: 0.6,
-        w: 10,
-        h: 2,
-        color: "FFFFFF",
-        fontFace: "Calibri",
-        fontSize: 60,
-        bold: true,
-    });
-
-    titleSlide.addText(
-        "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-        {
-            y: 4.5,
-            x: 2.2,
-            w: 10,
-            h: 2,
-            color: "FFFFFF",
-            fontFace: "Calibri",
-            fontSize: 8,
-        }
-    );
-
-
+      // titleSlide.addText(
+      //     "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+      //     {
+      //         y: 4.5,
+      //         x: 2.2,
+      //         w: 10,
+      //         h: 2,
+      //         color: "FFFFFF",
+      //         fontFace: "Calibri",
+      //         fontSize: 8,
+      //     }
+      // );
 
       ///slide_1
-    const slide = pptx.addSlide();
-    slide.background = { fill: "000000" };
+      const slide = pptxRef.current;
+      slide.background = { fill: "000000" };
 
-    const node = document.createElement("div");
-    node.innerHTML = chartImageURI;
+      const node = document.createElement("div");
+      node.innerHTML = chartImageURI;
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(chartImageURI, "text/html");
-    const svgs = doc.querySelectorAll("svg");
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(chartImageURI, "text/html");
+      const svgs = doc.querySelectorAll("svg");
 
-    const images = [];
+      const images = [];
 
-    svgs.forEach(async (svg, index) => {
-      try {
-        const svgData = new XMLSerializer().serializeToString(svg);
-        // const base64Image = btoa(svgData);
-        const utf8Data = unescape(encodeURIComponent(svgData));
-        const base64Image = btoa(utf8Data);
+      svgs.forEach(async (svg, index) => {
+        try {
+          const svgData = new XMLSerializer().serializeToString(svg);
+          // const base64Image = btoa(svgData);
+          const utf8Data = unescape(encodeURIComponent(svgData));
+          const base64Image = btoa(utf8Data);
 
-        const imageuri = `data:image/svg+xml;base64,${base64Image}`;
+          const imageuri = `data:image/svg+xml;base64,${base64Image}`;
 
-        await convertSvgToPng(imageuri)
-          .then((pngDataUri) => {
-            slide.addImage({
-              data: pngDataUri,
-              x: 0.3,
-              y: 1,
-              w: 7.5,
-              h: 4.2,
-            });
+          await convertSvgToPng(imageuri)
+            .then((pngDataUri) => {
+              slide.addImage({
+                data: pngDataUri,
+                x: 0.3,
+                y: 1,
+                w: 7.5,
+                h: 4.2,
+              });
 
-            slide.addText(data.title, {
-              y: -0.5,
-              x: 0.6,
-              w: 10,
-              h: 2,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 30,
-              bold: true,
-            });
-
-            slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
-                y: 4.5,
-                x: 2.2,
+              slide.addText(data.title, {
+                y: -0.5,
+                x: 0.6,
                 w: 10,
                 h: 2,
                 color: "FFFFFF",
                 fontFace: "Calibri",
-                fontSize: 8,
-              }
-            );
-            //  pptx.writeFile("output.pptx");
-          })
+                fontSize: 30,
+                bold: true,
+              });
 
-          .catch((error) => {});
+              slide.addText(
+                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+                {
+                  y: 4.5,
+                  x: 2.2,
+                  w: 10,
+                  h: 2,
+                  color: "FFFFFF",
+                  fontFace: "Calibri",
+                  fontSize: 8,
+                }
+              );
+              //  pptx.writeFile("output.pptx");
+            })
 
-        //mom table
-        const momtableElement = document.getElementById(tableid+"momtable");
+            .catch((error) => {});
 
-        const momsvgDataUri = convertTableToSvg(momtableElement);
-        await convertSvgToPng(momsvgDataUri)
-          .then((pngDataUri) => {
-            const momImageOptions = {
-              data: pngDataUri,
-              x: 8,
-              y: 1.2,
-              w: 1.75,
-              h: 0.85,
-            };
+          //mom table
+          const momtableElement = document.getElementById(tableid + "momtable");
 
-            slide.addImage(momImageOptions);
-            slide.addText("MOM", {
-              y: 0.7,
-              x: 8.5,
-              w: 0.75,
-              h: 0.85,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 15,
-              bold: true,
+          const momsvgDataUri = convertTableToSvg(momtableElement);
+          await convertSvgToPng(momsvgDataUri)
+            .then((pngDataUri) => {
+              const momImageOptions = {
+                data: pngDataUri,
+                x: 8,
+                y: 1.2,
+                w: 1.75,
+                h: 0.85,
+              };
+
+              slide.addImage(momImageOptions);
+              slide.addText("MOM", {
+                y: 0.7,
+                x: 8.5,
+                w: 0.75,
+                h: 0.85,
+                color: "FFFFFF",
+                fontFace: "Calibri",
+                fontSize: 15,
+                bold: true,
+              });
+              // pptx.writeFile("output.pptx");
+            })
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
             });
-            // pptx.writeFile("output.pptx");
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
 
-        //mom2 table
-        const mom2tableElement = document.getElementById(tableid+"mo2mtable");
-        // console.log(mom2tableElement)
-        const mom2svgDataUri = convertTableToSvg(mom2tableElement);
-        // console.log(mom2svgDataUri)
-        await convertSvgToPng(mom2svgDataUri)
-          .then((pngDataUri) => {
-            const momImageOptions = {
-              data: pngDataUri,
-              x: 8,
-              y: 2.75,
-              w: 1.75,
-              h: 0.85,
-            };
-            slide.addText("MO2M", {
-              y: 2.25,
-              x: 8.5,
-              w: 1,
-              h: 0.75,
-              color: "FFFFFF",
-              fontFace: "Calibri",
-              fontSize: 15,
-              bold: true,
+          //mom2 table
+          const mom2tableElement = document.getElementById(
+            tableid + "mo2mtable"
+          );
+          // console.log(mom2tableElement)
+          const mom2svgDataUri = convertTableToSvg(mom2tableElement);
+          // console.log(mom2svgDataUri)
+          await convertSvgToPng(mom2svgDataUri)
+            .then((pngDataUri) => {
+              const momImageOptions = {
+                data: pngDataUri,
+                x: 8,
+                y: 2.75,
+                w: 1.75,
+                h: 0.85,
+              };
+              slide.addText("MO2M", {
+                y: 2.25,
+                x: 8.5,
+                w: 1,
+                h: 0.75,
+                color: "FFFFFF",
+                fontFace: "Calibri",
+                fontSize: 15,
+                bold: true,
+              });
+              slide.addImage(momImageOptions);
+              // console.log("slide1 rendered")
+            })
+            .catch((error) => {
+              console.error("Error converting SVG to PNG:", error);
             });
-            slide.addImage(momImageOptions);
-            // console.log("slide1 rendered")
-          })
-          .catch((error) => {
-            console.error("Error converting SVG to PNG:", error);
-          });
-      } catch (error) {
-        console.error("Error converting SVG to image:", error);
-      }
-    });
-    // console.log("HHHHHHH")
-  }
+        } catch (error) {
+          console.error("Error converting SVG to image:", error);
+        }
+      });
+      // console.log("HHHHHHH")
+    }
   }, [chartImageURI]);
 
-
   return (
-    <><h1>{data.title}</h1>
+    <>
+      <h1>{data.title}</h1>
       <div id="googlegraphs">
         <Chart
+          chartLanguage={"hi"}
           chartType="ScatterChart"
           data={graphData}
           options={options}
@@ -431,7 +456,14 @@ const Slide26 = ({ pptx,subzonename, data,title,tableid }) => {
           chartPackage={["controls"]}
           getChartWrapper={(rcatChart) => {
             setTimeout(() => {
-              setChartImageURI(rcatChart.visualization.container.innerHTML);
+              let modifiedHtmlContent =
+                rcatChart.visualization.container.innerHTML.replace(
+                  /लाख/g,
+                  "L"
+                );
+              modifiedHtmlContent = modifiedHtmlContent.replace(/हज़ार/g, "K");
+              modifiedHtmlContent = modifiedHtmlContent.replace(/क॰/g, "Cr");
+              setChartImageURI(modifiedHtmlContent);
             }, 5000); // Wait for 5000 milliseconds (5 seconds)
           }}
           // ref={chartRef}
