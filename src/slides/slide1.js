@@ -4,12 +4,13 @@ import { Chart } from "react-google-charts";
 import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
+import html2canvas from 'html2canvas';
 
 const DataTable = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
-  const fontSize = 12;
+  const fontSize = 20;
   // console.log(data);
 
   return (
@@ -132,98 +133,20 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
     mo2m = data.mo2m;
   }
 
-  const convertTableToSvg = (tableElement, isMOMMO2MPresent = false) => {
-    const cellWidth = 65;
-    const cellHeight = 30;
-    const borderWidth = 1;
-    const fontSize = 9;
-
-    // Get the number of rows and columns in the table
-    const numRows = tableElement.rows.length;
-    const numCols = tableElement.rows[0].cells.length;
-
-    // Calculate SVG dimensions
-    const svgWidth = cellWidth * numCols;
-    const svgHeight = cellHeight * numRows;
-
-    // Create SVG element
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svg.setAttribute("width", svgWidth);
-    svg.setAttribute("height", svgHeight);
-
-    // Iterate over table rows and cells to create SVG elements
-    for (let i = 0; i < numRows; i++) {
-      for (let j = 0; j < numCols; j++) {
-        // Create rectangle for cell border
-        const rect = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "rect"
-        );
-        rect.setAttribute("x", j * cellWidth);
-        rect.setAttribute("y", i * cellHeight);
-        rect.setAttribute("width", cellWidth);
-        rect.setAttribute("height", cellHeight);
-        // Check cell content for Zomato or Swiggy and set background color accordingly
-        const cellContent = tableElement.rows[i].cells[j].textContent;
-        if (cellContent.includes("Zomato")) {
-          rect.setAttribute("fill", "red");
-        } else if (cellContent.includes("Swiggy")) {
-          rect.setAttribute("fill", "orange");
-        } else if (tableid == "slide_6" && i == 0 && numCols > 2) {
-          rect.setAttribute("fill", "red");
-        } else if (tableid == "slide_7" && i == 0 && numCols > 2) {
-          rect.setAttribute("fill", "orange");
-        } else {
-          rect.setAttribute("fill", "black");
-        }
-        rect.setAttribute("stroke", "white");
-        rect.setAttribute("stroke-width", borderWidth);
-        svg.appendChild(rect);
-
-        // Create text element for cell content
-        const text = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "text"
-        );
-        text.setAttribute("x", j * cellWidth + cellWidth / 2);
-        text.setAttribute("y", i * cellHeight + cellHeight / 2 + fontSize / 3);
-
-        if (isMOMMO2MPresent && j == 1) {
-          if (cellContent > 0) {
-            text.setAttribute("fill", "green");
-            text.textContent = cellContent + "%";
-          } else if (cellContent < 0) {
-            text.setAttribute("fill", "red");
-            text.textContent = cellContent+ "%";
-          } else {
-            text.setAttribute("fill", "white");
-            text.textContent = cellContent + "%";
-          }
-        } else {
-          text.setAttribute("fill", "white");
-          text.textContent = cellContent;
-        }
-
-        text.setAttribute("font-size", fontSize);
-        text.setAttribute("font-family", "Calibri");
-        text.setAttribute("text-anchor", "middle");
-
-        svg.appendChild(text);
-      }
-    }
-
-    // Serialize SVG to XML string
-    const svgXml = new XMLSerializer().serializeToString(svg);
-
-    // Encode SVG XML string to base64
-    const svgBase64 = btoa(svgXml);
-
-    // Construct data URI
-    const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
-
-    return dataUri;
+  const convertTableToImage = (tableElement) => {
+    return new Promise((resolve, reject) => {
+      html2canvas(tableElement)
+        .then((canvas) => {
+          const dataURL = canvas.toDataURL('image/png');
+          resolve(dataURL);
+        })
+        .catch((error) => {
+          console.error('Error converting table to image:', error);
+          reject(error);
+        });
+    });
   };
+  
 
   const formatNumber = (number) => {
     const crore = 10000000;
@@ -291,28 +214,6 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
     },
   };
 
-  const convertSvgToPng = (svgDataUri) => {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => {
-        const dpi = 8; // Example: Use a higher DPI for better clarity
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        const { width, height } = image;
-        canvas.width = width * dpi;
-        canvas.height = height * dpi;
-        context.scale(dpi, dpi);
-        context.imageSmoothingEnabled = false; // Disable anti-aliasing
-        context.drawImage(image, 0, 0, width, height);
-        const pngDataUri = canvas.toDataURL("image/png");
-        resolve(pngDataUri);
-      };
-      image.onerror = (error) => {
-        reject(error);
-      };
-      image.src = svgDataUri;
-    });
-  };
   // Declare pptx using useRef to avoid reinitialization
   const pptxRef = useRef(null);
   useEffect(() => {
@@ -323,7 +224,7 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
     if (chartImageURI !== "") {
       // const slide = pptx.addSlide();
       const slide = pptxRef.current;
-      slide.background = { fill: "000000" };
+      slide.background = { fill: "000001" };
 
       const node = document.createElement("div");
       node.innerHTML = chartImageURI;
@@ -336,65 +237,23 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
 
       svgs.forEach(async (svg, index) => {
         try {
-          const svgData = new XMLSerializer().serializeToString(svg);
-          const utf8Data = unescape(encodeURIComponent(svgData));
-          const base64Image = btoa(utf8Data);
-
-          const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-
-          await convertSvgToPng(imageuri)
-            .then((pngDataUri) => {
-              slide.addImage({
-                data: pngDataUri,
-                x: 0.6,
-                y: 1,
-                w: 7,
-                h: 3,
-              });
-
-              slide.addText(data.title, {
-                y: -0.5,
-                x: 0.6,
-                w: 10,
-                h: 2,
-                color: "FFFFFF",
-                fontFace: "Calibri",
-                fontSize: 30,
-                bold: true,
-              });
-
-              slide.addText(
-                pptFooter,
-                {
-                  y: 4.5,
-                  x: 2.2,
-                  w: 10,
-                  h: 2,
-                  color: "FFFFFF",
-                  fontFace: "Calibri",
-                  fontSize: 8,
-                }
-              );
-              //  pptx.writeFile("output.pptx");
-            })
-
-            .catch((error) => {});
-
           //main table
           const tableElement = document.getElementById(tableid + "table");
+          const pngDataUri= convertTableToImage(tableElement)
           // console.log(tableid + "table");
-          // console.log(tableElement);
-          const svgDataUri = convertTableToSvg(tableElement);
+          console.log(pngDataUri);
+          // const svgDataUri = convertTableToSvg(tableElement);
 
-          await convertSvgToPng(svgDataUri)
-            .then((pngDataUri) => {
-              slide.addImage({
-                data: pngDataUri,
-                x: 5.9,
-                y: 1,
-                w: 3.5,
-                h: 3,
-              });
+          await convertTableToImage(tableElement)
+          .then((pngDataUri) => {
+            slide.addImage({
+              data: pngDataUri,
+              x: 5.9,
+              y: 1,
+              w: 30.5,
+              h: 3,
+            });
+              console.log(pngDataUri)
             })
             .catch((error) => {
               console.log(error);
@@ -406,15 +265,15 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
               tableid + "momtable"
             );
             // console.log(momtableElement);
-            const momsvgDataUri = convertTableToSvg(momtableElement, true);
-            await convertSvgToPng(momsvgDataUri)
+            // const momsvgDataUri = convertTableToSvg(momtableElement, true);
+            await convertTableToImage(momtableElement)
               .then((pngDataUri) => {
                 const momImageOptions = {
                   data: pngDataUri,
-                  x: 0.6,
+                  x: 10.6,
                   y: 4.5,
-                  w: 1.75,
-                  h: 0.85,
+                  w: 900.75,
+                  h: 5.85,
                 };
 
                 slide.addImage(momImageOptions);
@@ -441,8 +300,8 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
               tableid + "mo2mtable"
             );
             // console.log(mom2tableElement);
-            const mom2svgDataUri = convertTableToSvg(mom2tableElement, true);
-            await convertSvgToPng(mom2svgDataUri)
+            // const mom2svgDataUri = convertTableToSvg(mom2tableElement, true);
+            await convertTableToImage(mom2tableElement)
               .then((pngDataUri) => {
                 const momImageOptions = {
                   data: pngDataUri,
@@ -506,8 +365,10 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
           // chartLanguage={"hi"}
           // ref={chartRef}
         />
+        <p> hello </p>
       </div>
       <DataTable tableid={tableid} data={table} />
+      <p> hello </p>
       {mom.length !== 0 ? <MomTable tableid={tableid} data={mom} /> : null}
       {mo2m.length !== 0 ? <Mo2mTable tableid={tableid} data={mo2m} /> : null}
     </>
