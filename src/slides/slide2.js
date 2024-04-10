@@ -74,7 +74,7 @@ const DataTable = ({ data }) => {
   );
 };
 
-const Table1 = ({ data,tableid }) => {
+const Table1 = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -88,7 +88,7 @@ const Table1 = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"table1"}
+      id={tableid + "table1"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -101,7 +101,9 @@ const Table1 = ({ data,tableid }) => {
                   padding: "8px",
                 }}
               >
-                {cell}
+                {cellIndex == 1 && typeof cell === "number" && !isNaN(cell)
+                  ? parseFloat(cell.toFixed(0)).toLocaleString(`en-IN`)
+                  : cell}
               </td>
             ))}
           </tr>
@@ -111,7 +113,7 @@ const Table1 = ({ data,tableid }) => {
   );
 };
 
-const Table2 = ({ data,tableid }) => {
+const Table2 = ({ data, tableid }) => {
   const cellWidth = 120;
   const cellHeight = 10;
   const borderWidth = 1;
@@ -125,7 +127,7 @@ const Table2 = ({ data,tableid }) => {
         color: "white",
         width: "20%",
       }}
-      id={tableid+"table2"}
+      id={tableid + "table2"}
     >
       <tbody>
         {data.map((row, rowIndex) => (
@@ -138,7 +140,9 @@ const Table2 = ({ data,tableid }) => {
                   padding: "8px",
                 }}
               >
-                {cell}
+                {cellIndex == 1 && typeof cell === "number" && !isNaN(cell)
+                  ? parseFloat(cell.toFixed(0)).toLocaleString(`en-IN`)
+                  : cell}
               </td>
             ))}
           </tr>
@@ -148,7 +152,7 @@ const Table2 = ({ data,tableid }) => {
   );
 };
 
-const Slide2 = ({ data, pptx,tableid, title }) => {
+const Slide2 = ({ data, pptx, tableid, title, pptFooter }) => {
   // console.log("App body: "+ ++countRef.current)
 
   const [chartImageURI, setChartImageURI] = useState("");
@@ -200,7 +204,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
     },
   };
 
-  const convertTableToSvg = (tableElement) => {
+  const convertTableToSvg = (tableElement, headerColor) => {
     const cellWidth = 75;
     const cellHeight = 20;
     const borderWidth = 1;
@@ -234,10 +238,10 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
         rect.setAttribute("height", cellHeight);
         // Check cell content for Zomato or Swiggy and set background color accordingly
         const cellContent = tableElement.rows[i].cells[j].textContent;
-        if (cellContent.includes("Zomato")) {
-          rect.setAttribute("fill", "red");
-        } else if (cellContent.includes("Swiggy")) {
-          rect.setAttribute("fill", "orange");
+
+        if (i == 0) {
+          rect.setAttribute("fill", headerColor);
+          console.log(headerColor)
         } else {
           rect.setAttribute("fill", "black");
         }
@@ -270,8 +274,6 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
     // Encode SVG XML string to base64
     const svgBase64 = btoa(svgXml);
 
-    
-
     // Construct data URI
     const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
 
@@ -302,11 +304,11 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
     });
   };
 
-     // Declare pptx using useRef to avoid reinitialization
-     const pptxRef = useRef(null);
-     useEffect(() => {
-      pptxRef.current = pptx.addSlide();
-    }, [])
+  // Declare pptx using useRef to avoid reinitialization
+  const pptxRef = useRef(null);
+  useEffect(() => {
+    pptxRef.current = pptx.addSlide();
+  }, []);
 
   useEffect(() => {
     // console.log(chartImageURI);
@@ -337,7 +339,7 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
           // console.log(imageuri);
 
-          await convertSvgToPng(imageuri)
+          await convertSvgToPng(imageuri, "red")
             .then((pngDataUri) => {
               // console.log(pngDataUri);
 
@@ -368,10 +370,10 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
             });
 
           //mom table
-          const table1Element = document.getElementById(tableid+"table1");
+          const table1Element = document.getElementById(tableid + "table1");
           // console.log(table1Element);
-          const table1svgDataUri = convertTableToSvg(table1Element);
-          await convertSvgToPng(table1svgDataUri)
+          const table1svgDataUri = convertTableToSvg(table1Element,"red");
+          await convertSvgToPng(table1svgDataUri, "orange")
             .then((pngDataUri) => {
               // console.log(pngDataUri);
               const table1ImageOptions = {
@@ -391,8 +393,8 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
             });
           // console.log("hello");
           //mom2 table
-          const table2Element = document.getElementById(tableid+"table2");
-          const table2svgDataUri = convertTableToSvg(table2Element);
+          const table2Element = document.getElementById(tableid + "table2");
+          const table2svgDataUri = convertTableToSvg(table2Element,"orange");
 
           await convertSvgToPng(table2svgDataUri)
             .then((pngDataUri) => {
@@ -406,18 +408,15 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
               };
 
               // console.log(table2ImageOptions);
-              slide.addText(
-                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-                {
-                  y: 4.5,
-                  x: 2.2,
-                  w: 10,
-                  h: 2,
-                  color: "FFFFFF",
-                  fontFace: "Calibri",
-                  fontSize: 8,
-                }
-              );
+              slide.addText(pptFooter, {
+                y: 4.5,
+                x: 2.2,
+                w: 10,
+                h: 2,
+                color: "FFFFFF",
+                fontFace: "Calibri",
+                fontSize: 8,
+              });
               slide.addImage(table2ImageOptions);
               // pptx.writeFile("output.pptx");
               // console.log("slide2 rendered");
@@ -432,10 +431,10 @@ const Slide2 = ({ data, pptx,tableid, title }) => {
     }
   }, [chartImageURI]);
 
-  const generateppt = async () => {
-    console.log("hello");
-    setChartImageURI(chartRef.current?.chart);
-  };
+  // const generateppt = async () => {
+  //   console.log("hello");
+  //   setChartImageURI(chartRef.current?.chart);
+  // };
 
   return (
     <div>

@@ -116,7 +116,7 @@ const Mo2mTable = ({ data, tableid }) => {
   );
 };
 
-const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
+const Slide26 = ({ pptx, subzonename, data, title, tableid,pptFooter }) => {
   const [chartImageURI, setChartImageURI] = useState("");
   const graphData = data.graph;
   const mom = data.mom;
@@ -219,7 +219,7 @@ const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
             text.textContent = cellContent+"%";
           } else if (cellContent < 0) {
             text.setAttribute("fill", "red");
-            text.textContent = cellContent;
+            text.textContent = cellContent+"%";
           } else {
             text.setAttribute("fill", "white");
             text.textContent = cellContent+"%";
@@ -233,6 +233,7 @@ const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
 
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
+        
         // text.textContent = cellContent;
         svg.appendChild(text);
       }
@@ -281,36 +282,7 @@ const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
 
   useEffect(() => {
     if (chartImageURI !== "") {
-      // //subzone slide code
-      // const titleSlide = pptxRef.current;
-      // titleSlide.background = { fill: "000000" };
-      // //main table
 
-      // titleSlide.addText(subzonename, {
-      //     y: 2,
-      //     x: 0.6,
-      //     w: 10,
-      //     h: 2,
-      //     color: "FFFFFF",
-      //     fontFace: "Calibri",
-      //     fontSize: 60,
-      //     bold: true,
-      // });
-
-      // titleSlide.addText(
-      //     "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-      //     {
-      //         y: 4.5,
-      //         x: 2.2,
-      //         w: 10,
-      //         h: 2,
-      //         color: "FFFFFF",
-      //         fontFace: "Calibri",
-      //         fontSize: 8,
-      //     }
-      // );
-
-      ///slide_1
       const slide = pptxRef.current;
       slide.background = { fill: "000000" };
 
@@ -354,8 +326,7 @@ const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
               });
 
               slide.addText(
-                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-                {
+                pptFooter,                {
                   y: 4.5,
                   x: 2.2,
                   w: 10,
@@ -386,7 +357,7 @@ const Slide26 = ({ pptx, subzonename, data, title, tableid }) => {
 
               slide.addImage(momImageOptions);
               slide.addText("MOM", {
-                y: 0.7,
+                y: 0.66,
                 x: 8.5,
                 w: 0.75,
                 h: 0.85,

@@ -27,6 +27,7 @@ const Table = ({ data ,tableid}) => {
                   width:"70px"
                 }}
               >
+                {/* {typeof cell === 'number' && !isNaN(cell)? parseFloat(cell.toFixed(1)).toLocaleString(`en-IN`):cell} */}
                 {cell}
               </td>
             ))}
@@ -37,7 +38,7 @@ const Table = ({ data ,tableid}) => {
   );
 };
 
-const Slide4StoreWiseKTP = ({ pptx,data,title,tableid }) => {
+const Slide4StoreWiseKTP = ({ pptx,data,title,tableid,pptFooter }) => {
   // const data = [
   //   [
   //     "Location",
@@ -223,8 +224,7 @@ const Slide4StoreWiseKTP = ({ pptx,data,title,tableid }) => {
           });
 
           slide.addText(
-            "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-            {
+            pptFooter,            {
               y: 4.5,
               x: 2.2,
               w: 10,

@@ -1083,6 +1083,7 @@ function App() {
   // ];
 
   let arraySlides = [];
+  const pptFooter = "©2024 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing"
   const [slides,setSlides] = useState([])
   const pptxRef = useRef(null);
   console.log(allslidedata)
@@ -1115,106 +1116,105 @@ function App() {
           for (var slide in allslidedata[prop][subzone]) {
             if(slide  == 'slide_1'){
               console.log(allslidedata[prop][subzone][slide]);
-              arraySlides.push(<Slide26 subzonename={subzone} tableid={subzone+slide} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current} />)
+              arraySlides.push(<Slide26 pptFooter={pptFooter} subzonename={subzone} tableid={subzone+slide} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current} />)
             }
             else if(slide  == 'slide_2'){
               console.log(allslidedata[prop][subzone][slide]);
-              arraySlides.push(<Slide27 tableid={subzone+slide} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current} />)
+              arraySlides.push(<Slide27 pptFooter={pptFooter} tableid={subzone+slide} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current} />)
             }
             else if(slide  == 'slide_3'){
               console.log(allslidedata[prop][subzone][slide]);
-              arraySlides.push(<SlideX data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
+              arraySlides.push(<SlideX pptFooter={pptFooter} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
             }
             else if(slide  == 'slide_4'){
               console.log(allslidedata[prop][subzone][slide]);
-              arraySlides.push(<Slide31 data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
+              arraySlides.push(<Slide31 pptFooter={pptFooter} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
             }
             else if(slide  == 'slide_5'){
               console.log(allslidedata[prop][subzone][slide]);
-              arraySlides.push(<Slide32 data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
+              arraySlides.push(<Slide32 pptFooter={pptFooter} data={allslidedata[prop][subzone][slide]} pptx={pptxRef.current}/>)
             }
     
           }
         }
-      } 
-      else {
+      } else {
         console.log(prop); 
         if(prop == "slide_4"){  
           // root.render(<div>hello....</div>)
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4 tableid="slide_4" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
+          arraySlides.push( <Slide4  pptFooter={pptFooter} tableid="slide_4" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
         }
         else if(prop == "slide_5"){
           console.log(allslidedata[prop])
           // root.render(<div>wello....</div>)
-          arraySlides.push( <StoreWiseGridVisibility tableid="slide_5" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 5" />,)
+          arraySlides.push( <StoreWiseGridVisibility pptFooter={pptFooter} tableid="slide_5" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 5" />,)
   
         }
         else if(prop == "slide_6"){
           console.log(allslidedata[prop])
           // root.render(<div>wello....</div>)
-          arraySlides.push( <Slide4 tableid="slide_6" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
+          arraySlides.push( <Slide4 pptFooter={pptFooter} tableid="slide_6" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
   
         }
         else if(prop == "slide_7"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4 tableid="slide_7" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
+          arraySlides.push( <Slide4 pptFooter={pptFooter} tableid="slide_7" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
   
         }
         else if(prop == "slide_8"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide2 tableid="slide_8" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
+          arraySlides.push( <Slide2 pptFooter={pptFooter} tableid="slide_8" pptx={pptxRef.current} data={allslidedata[prop]} title="Slide 4" />,)
   
         }
         else if(prop == "slide_9"){
           console.log(allslidedata[prop])
-          arraySlides.push( <StoreWiseGridVisibility tableid="slide_9" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <StoreWiseGridVisibility pptFooter={pptFooter} tableid="slide_9" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop == "slide_10"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4StoreWiseKTP tableid="slide_10" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <Slide4StoreWiseKTP pptFooter={pptFooter} tableid="slide_10" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop == "slide_11"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4StoreWiseKTP tableid="slide_11" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <Slide4StoreWiseKTP pptFooter={pptFooter} tableid="slide_11" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop == "slide_12"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4StoreWiseKTP tableid="slide_12" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <Slide4StoreWiseKTP pptFooter={pptFooter} tableid="slide_12" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop == "slide_15"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4StoreWiseKTP tableid="slide_15" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <Slide4StoreWiseKTP pptFooter={pptFooter} tableid="slide_15" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop == "slide_16"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4StoreWiseKTP tableid="slide_16" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
+          arraySlides.push( <Slide4StoreWiseKTP pptFooter={pptFooter} tableid="slide_16" pptx={pptxRef.current} data={allslidedata[prop]}/>,)
   
         }
         else if(prop ==  "slide_18"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide18 tableid="slide_18" pptx={pptxRef.current} data={allslidedata[prop]} />,)
+          arraySlides.push( <Slide18 pptFooter={pptFooter} tableid="slide_18" pptx={pptxRef.current} data={allslidedata[prop]} />,)
         }
         else if(prop ==  "slide_19"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide20 tableid="slide_19" pptx={pptxRef.current} data={allslidedata[prop]} />,)
+          arraySlides.push( <Slide20 pptFooter={pptFooter} tableid="slide_19" pptx={pptxRef.current} data={allslidedata[prop]} />,)
         }
         else if(prop ==  "slide_20"){
           console.log(allslidedata[prop])
-          arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_20" pptx={pptxRef.current} data={allslidedata[prop]} />,)
+          arraySlides.push( <StoreWiseOrderIDWiseRatingSplit pptFooter={pptFooter} tableid="slide_20" pptx={pptxRef.current} data={allslidedata[prop]} />,)
         }
         else if(prop ==  "slide_21"){
           console.log(allslidedata[prop])
-          arraySlides.push( <StoreWiseOrderIDWiseRatingSplit tableid="slide_21" pptx={pptxRef.current} data={allslidedata[prop]} />,)
+          arraySlides.push( <StoreWiseOrderIDWiseRatingSplit pptFooter={pptFooter} tableid="slide_21" pptx={pptxRef.current} data={allslidedata[prop]} />,)
         }
         else if(prop ==  "slide_22"){
           console.log(allslidedata[prop])
-          arraySlides.push( <Slide4 tableid="slide_21" pptx={pptxRef.current} data={allslidedata[prop]} />,)
+          arraySlides.push( <Slide4 pptFooter={pptFooter} tableid="slide_21" pptx={pptxRef.current} data={allslidedata[prop]} />,)
         }
       }
     }

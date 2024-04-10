@@ -33,7 +33,7 @@ const DataTable = ({ data, tableid }) => {
                   padding: "8px",
                 }}
               >
-                {cell}
+                {typeof cell === 'number' && !isNaN(cell)? parseFloat(cell.toFixed(1)).toLocaleString(`en-IN`):cell}
               </td>
             ))}
           </tr>
@@ -70,7 +70,7 @@ const MomTable = ({ data, tableid }) => {
                   padding: "8px",
                 }}
               >
-                {cell}
+                {typeof cell === 'number' && !isNaN(cell)? parseFloat(cell.toFixed(0)).toLocaleString(`en-IN`):cell}
               </td>
             ))}
           </tr>
@@ -107,7 +107,7 @@ const Mo2mTable = ({ data, tableid }) => {
                   padding: "8px",
                 }}
               >
-                {cell}
+                {typeof cell === 'number' && !isNaN(cell)? parseFloat(cell.toFixed(0)).toLocaleString(`en-IN`):cell}
               </td>
             ))}
           </tr>
@@ -117,37 +117,9 @@ const Mo2mTable = ({ data, tableid }) => {
   );
 };
 
-const numberTrimmer = (value, index) => {
-  // console.log("value", value, index);
-  const log10 = parseInt(Math.log10(value));
-  const equivalentWithIn100 =
-    value / Math.pow(10, log10 % 2 ? log10 : log10 - 1);
-  let val = parseFloat(value || 0).toFixed(2);
 
-  // if(value<=1 && value>0){
-  //   return (parseFloat(value) * 100).toFixed(2) + '%';
-  // }
-  switch (log10) {
-    case 3:
-    case 4:
-      val = "K";
-      break;
-    case 5:
-    case 6:
-      val = "L";
-      break;
-    case 7:
-    case 8:
-      val = "Cr";
-      break;
-    default:
-      return value;
-  }
 
-  return value ? parseFloat(equivalentWithIn100).toFixed(2) + val : value;
-};
-
-const Slide4 = ({ pptx, data, tableid }) => {
+const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
   const [chartImageURI, setChartImageURI] = useState("");
   const table = data.table;
   const graphData = data.graph;
@@ -223,7 +195,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
             text.textContent = cellContent + "%";
           } else if (cellContent < 0) {
             text.setAttribute("fill", "red");
-            text.textContent = cellContent;
+            text.textContent = cellContent+ "%";
           } else {
             text.setAttribute("fill", "white");
             text.textContent = cellContent + "%";
@@ -374,7 +346,7 @@ const Slide4 = ({ pptx, data, tableid }) => {
               });
 
               slide.addText(
-                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
+                pptFooter,
                 {
                   y: 4.5,
                   x: 2.2,

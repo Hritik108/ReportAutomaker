@@ -40,7 +40,7 @@ const Table = ({ data, id }) => {
   );
 };
 
-const TitleSLide = ({ data, pptx }) => {
+const TitleSLide = ({ data, pptx,pptFooter }) => {
 
 // Declare pptx using useRef to avoid reinitialization
 const pptxRef = useRef(null);
@@ -66,8 +66,7 @@ pptxRef.current = pptx.addSlide();
       });
 
       slide.addText(
-        "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-        {
+        pptFooter,        {
           y: 4.5,
           x: 2.2,
           w: 10,

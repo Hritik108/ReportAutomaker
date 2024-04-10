@@ -80,7 +80,7 @@ const MomTable = ({ data,tableid }) => {
 };
 
 
-const Slide27 = ({ pptx,tableid, data}) => {
+const Slide27 = ({ pptx,tableid, data,pptFooter}) => {
 
   const [chartImageURI, setChartImageURI] = useState("");
 
@@ -190,7 +190,7 @@ const Slide27 = ({ pptx,tableid, data}) => {
             text.textContent = cellContent+"%";
           } else if (cellContent < 0) {
             text.setAttribute("fill", "red");
-            text.textContent = cellContent;
+            text.textContent = cellContent+"%";
           } else {
             text.setAttribute("fill", "white");
             text.textContent = cellContent+"%";
@@ -298,8 +298,7 @@ pptxRef.current = pptx.addSlide();
             });
 
             slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
+              pptFooter,              {
                 y: 4.5,
                 x: 2.2,
                 w: 10,

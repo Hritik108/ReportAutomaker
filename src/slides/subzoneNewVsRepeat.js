@@ -5,7 +5,7 @@ import { toPng } from "html-to-image";
 import { type } from "@testing-library/user-event/dist/type";
 import { render } from "@testing-library/react";
 
-const Slide32 = ({ pptx, data}) => {
+const Slide32 = ({ pptx, data,pptFooter}) => {
   const [chartImageURI1, setChartImageURI1] = useState("");
   const [chartImageURI2, setChartImageURI2] = useState("");
   const graphData1 = data.graph1
@@ -133,8 +133,7 @@ pptxRef.current = pptx.addSlide();
               });
 
               slide.addText(
-                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-                {
+                pptFooter,                {
                   y: 4.5,
                   x: 2.2,
                   w: 10,

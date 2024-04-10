@@ -76,7 +76,7 @@ const Table2 = ({ data,tableid }) => {
   );
 };
 
-const Slide18 = ({ tableid,pptx, data, title }) => {
+const Slide18 = ({ tableid,pptx, data, title,pptFooter }) => {
   const [chartImageURI, setChartImageURI] = useState("");
   const table1 = data.table1
   const table2 = data.table2
@@ -85,7 +85,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
   const options = {
     title: "",
     vAxis: { title: "" },
-    hAxis: { title: "Month" },
+    hAxis: { title: "" },
     seriesType: "bars",
     // series: {
     //   0: { tooltip: false },
@@ -115,31 +115,6 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
     },
   };
 
-  // const graphData = [
-  //   [
-  //     "sub zone",
-  //     "Total Food Issue",
-  //     { role: "annotation" },
-  //     "Quality issue",
-  //     { role: "annotation" },
-  //     "Quantity issue",
-  //     { role: "annotation" },
-  //     "packaging",
-  //     { role: "annotation" },
-  //     "wrong item",
-  //     { role: "annotation" }, // Annotations for each data point
-  //     "special inst issue",
-  //     { role: "annotation" },
-  //     "wrong item",
-  //     { role: "Bad order" },
-  //   ],
-  //   ["Malad west", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
-  //   ["dadar", 165, 165, 938, 938, 522, 522, 998, 998, 450, 450, 165, 165, 938, 938,],
-  //   ["navi mumbai", 135, 135, 1120, 1120, 599, 599, 1268, 1268, 288, 288, 165, 165, 938, 938,],
-  //   ["bkc", 157, 157, 1167, 1167, 587, 587, 807, 807, 397, 397, 165, 165, 938, 938,],
-  //   ["2007/08", 139, 139, 1110, 1110, 615, 615, 968, 968, 215, 215, 165, 165, 938, 938,],
-  //   ["2008/09", 136, 136, 691, 691, 629, 629, 1026, 1026, 366, 366, 165, 165, 938, 938,],
-  // ];
 
   const convertTableToSvg = (tableElement, height) => {
     let cellWidth = 75;
@@ -181,10 +156,8 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
         rect.setAttribute("height", cellHeight);
         // Check cell content for Zomato or Swiggy and set background color accordingly
         const cellContent = tableElement.rows[i].cells[j].textContent;
-        if (cellContent.includes("Zomato")) {
+        if (cellContent.includes("Reason") || cellContent == "%") {
           rect.setAttribute("fill", "red");
-        } else if (cellContent.includes("Swiggy")) {
-          rect.setAttribute("fill", "orange");
         } else {
           rect.setAttribute("fill", "black");
         }
@@ -356,8 +329,7 @@ const Slide18 = ({ tableid,pptx, data, title }) => {
 
               // console.log(table2ImageOptions);
               slide.addText(
-                "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-                {
+                pptFooter,                {
                   y: 4.5,
                   x: 2.2,
                   w: 10,

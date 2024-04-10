@@ -29,6 +29,7 @@ const Table = ({ data, id,tableid }) => {
                   width: "70px",
                 }}
               >
+                {/* {typeof cell === 'number' && !isNaN(cell)? parseFloat(cell.toFixed(0)).toLocaleString(`en-IN`):cell} */}
                 {cell}
               </td>
             ))}
@@ -40,32 +41,8 @@ const Table = ({ data, id,tableid }) => {
   );
 };
 
-const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
-  // console.log('3 Storewisegridvisibility')
-  // const data = [
-  //   [
-  //     ["Location", "Zomato", "Swiggy"],
-  //     ["Jogeshwari", 0, 0],
-  //     ["Vashi", 0, 0],
-  //     ["Mohammad Ali Road", 0, 0],
-  //     ["Marol", 0, 0],
-  //     ["Jogeshwari", 0, 0],
-  //     ["Vashi", 0, 0],
-  //     ["Mohammad Ali Road", 0, 0],
-  //     ["Marol", 0, 0],
-  //     ["Marol", 0, 0],
-  //      ["Jogeshwari", 0, 0],
-  //      ["Jogeshwari", 0, 0],
-  //   ],
-  //   [
-    
-  //     ["Jogeshwari", 0, 0],
-  //     ["Vashi", 0, 0],
-  //     ["Mohammad Ali Road", 0, 0],
-  //     ["Marol", 0, 0],
-  //   ],
-  // ];
-  // console.log('8 StoreWiseGridVisibility')
+const StoreWiseGridVisibility = ({ data,tableid,pptx,title,pptFooter }) => {
+
   console.log(tableid)
   console.log(data.table)
   const tabledata = [data.table]
@@ -173,7 +150,15 @@ const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
         text.setAttribute("font-size", fontSize);
         text.setAttribute("font-family", "Calibri");
         text.setAttribute("text-anchor", "middle");
-        text.textContent = cellContent;
+  
+        if(typeof cellContent === 'number' && !isNaN(cellContent)){
+          text.textContent = parseFloat(cellContent.toFixed(1)).toLocaleString(`en-IN`);
+        }
+        else{
+          text.textContent = cellContent
+        }
+        
+
         // console.log(i + " " + j);
         // console.log(text.textContent);
         svg.appendChild(text);
@@ -239,8 +224,7 @@ const StoreWiseGridVisibility = ({ data,tableid,pptx,title }) => {
             });
 
             slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
+              pptFooter ,             {
                 y: 4.5,
                 x: 2.2,
                 w: 10,

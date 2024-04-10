@@ -126,7 +126,7 @@ const Mom2Table = ({ data }) => {
   );
 };
 
-const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
+const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx,pptFooter}) => {
 
 
  
@@ -157,14 +157,14 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
     'tooltip' : {
       trigger: 'none'
     },
-    // chartArea: {
-    //   left: 70,
-    //   top: 70,
-    //   bottom: 30,
-    //   right: 70,
-    //   width: "100%",
-    //   height: "70%",
-    // },
+    chartArea: {
+      left: 70,
+      top: 70,
+      bottom: 30,
+      right: 70,
+      width: "90%",
+      // height: "90%",
+    },
     colors: ["rgb(119, 217, 112)", "rgb(255, 152, 0)", "rgb(250, 112, 112)"], // Specify the colors for each category
   };
   
@@ -331,8 +331,7 @@ const StoreWiseOrderIDWiseRatingSplit = ({ tableid,data,pptx}) => {
             });
 
             slide.addText(
-              "©2023 - Restaverse pvt ltd, and/or its subsidiaries. This material is confidential unless otherwise stated in writing",
-              {
+              pptFooter,              {
                 y: 4.5,
                 x: 2.2,
                 w: 10,
