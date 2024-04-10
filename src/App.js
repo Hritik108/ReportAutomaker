@@ -1243,7 +1243,6 @@ function App() {
         {slides.length >0 && slides.map((component, index) => (
           <React.Fragment key={index}>{component}</React.Fragment>
         ))}
-       
       </div>
       <button onClick={generateppt}>Generate PPT</button>
     </>

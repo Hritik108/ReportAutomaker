@@ -225,7 +225,23 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
     return dataUri;
   };
 
+  const formatNumber = (number) => {
+    const crore = 10000000;
+    const lakh = 100000;
+    const thousand = 1000;
+    if (number >= crore) {
+      return (number / crore).toFixed(2) + " Cr";
+    } else if (number >= lakh) {
+      return (number / lakh).toFixed(2) + " L";
+    } else if (number >= thousand) {
+      return (number / thousand).toFixed(2) + " K";
+    } else {
+      return number.toString();
+    }
+  };
+
   const options = {
+    chartLanguage: "en-IN",
     series: {
       0: {
         annotations: { stem: { length: -30 } },
@@ -243,6 +259,7 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
       2: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
       3: { targetAxisIndex: 1, type: "line", lineWidth: 2 },
     },
+
     vAxes: {
       0: {
         gridlines: { color: "transparent" },
@@ -255,6 +272,7 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
         format: "short",
       },
     },
+
     legend: { position: "top" },
     annotations: {
       alwaysOutside: true,
@@ -330,7 +348,7 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
                 data: pngDataUri,
                 x: 0.6,
                 y: 1,
-                w: 4.5,
+                w: 7,
                 h: 3,
               });
 
