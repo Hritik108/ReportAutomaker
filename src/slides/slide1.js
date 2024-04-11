@@ -308,9 +308,12 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
         resolve(pngDataUri);
       };
       image.onerror = (error) => {
+        // console.log('Image loading error hello:', error);
         reject(error);
       };
       image.src = svgDataUri;
+      const { width, height } = image;
+      console.log(image.src, 'hello');
     });
   };
   // Declare pptx using useRef to avoid reinitialization
@@ -336,17 +339,16 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
 
       svgs.forEach(async (svg, index) => {
         try {
-          const svgData = new XMLSerializer().serializeToString(svg);
-          const utf8Data = unescape(encodeURIComponent(svgData));
-          const base64Image = btoa(utf8Data);
-
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const utf8Data = unescape(encodeURIComponent(svgData));
+           const base64Image = btoa(utf8Data);
           const imageuri = `data:image/svg+xml;base64,${base64Image}`;
-
+          // console.log(imageuri, 'hello');
           await convertSvgToPng(imageuri)
             .then((pngDataUri) => {
               slide.addImage({
                 data: pngDataUri,
-                x: 0.6,
+                x: 0.1,
                 y: 1,
                 w: 7,
                 h: 3,
@@ -376,20 +378,27 @@ const Slide4 = ({ pptx, data, tableid,pptFooter }) => {
                 }
               );
               //  pptx.writeFile("output.pptx");
-            })
+             })
 
             .catch((error) => {});
 
           //main table
-          const tableElement = document.getElementById(tableid + "table");
-          // console.log(tableid + "table");
-          // console.log(tableElement);
-          const svgDataUri = convertTableToSvg(tableElement);
+          // const tableElement = document.getElementById(tableid + "table");
+          // // console.log(tableid + "table");
+          // // console.log(tableElement);
+          // const svgDataUri = convertTableToSvg(tableElement);
 
-          await convertSvgToPng(svgDataUri)
-            .then((pngDataUri) => {
+          const tableElement = document.getElementById(tableid + "table");
+          const svgData2 = new XMLSerializer().serializeToString(tableElement);
+          const utf8Data2 = unescape(encodeURIComponent(svgData2));
+          const base64Image2 = btoa(utf8Data2);
+          const imageuri2 = `data:image/svg+xml;base64,${base64Image2}`;
+          // console.log(imageuri2, 'hello');
+          const temp= await convertSvgToPng(imageuri2);
+          await convertSvgToPng(imageuri2)
+            .then((pngDataUri2) => {
               slide.addImage({
-                data: pngDataUri,
+                data: pngDataUri2,
                 x: 5.9,
                 y: 1,
                 w: 3.5,
